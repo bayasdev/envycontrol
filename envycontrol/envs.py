@@ -31,7 +31,3 @@ ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300"
 # Finally, remove the NVIDIA dGPU
 ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x03[0-9]*", ATTR{remove}="1"
 '''
-
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-LOG_FILE_PATH = ROOT_DIR + '/logs/envycontrol.log'

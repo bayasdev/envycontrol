@@ -1,10 +1,9 @@
 import os
 import sys
 import subprocess
-from args import parse_args
-from logger import log
-import switcher
-from envs import VERSION, BLACKLIST_PATH, UDEV_PATH
+from .args import parse_args
+from .switcher import switch_on, switch_off
+from .envs import VERSION, BLACKLIST_PATH, UDEV_PATH
 
 
 def main():
@@ -15,11 +14,11 @@ def main():
         _show_version()
     elif args.switch:
         if args.switch == 'on':
-            switcher.switch_on()
+            switch_on()
         elif args.switch == 'off':
-            switcher.switch_off()
+            switch_off()
         else:
-            log.error('Invalid argument for --switch')
+            print('Invalid argument for --switch')
             sys.exit(1)
 
 def _query_dgpu():
