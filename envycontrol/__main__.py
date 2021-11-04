@@ -1,9 +1,10 @@
+import os
 import sys
 import subprocess
-import os
 from args import parse_args
 from logger import log
-import envs
+import switcher
+from envs import VERSION, BLACKLIST_PATH, UDEV_PATH
 
 
 def main():
@@ -13,20 +14,23 @@ def main():
     elif args.version:
         _show_version()
     elif args.switch:
-        if args.switch in ['on', 'off']:
-            _switch_mode(args.switch)
+        if args.switch == 'on':
+            switcher.switch_on()
+        elif args.switch == 'off':
+            switcher.switch_off()
         else:
             log.error('Invalid argument for --switch')
             sys.exit(1)
-    else:
-        pass
 
 def _query_dgpu():
-    blacklist, rules = _check_files()
-    if blacklist and rules:
-        print('dGPU Mode: off')
+    # Check if EnvyControl generated files exist
+    blacklist_exists = os.path.isfile(BLACKLIST_PATH)
+    rules_exists = os.path.isfile(UDEV_PATH)
+    if blacklist_exists and rules_exists:
+        print('EnvyControl dGPU Mode: off')
     else:
-        print('dGPU Mode: on')
+        print('EnvyControl dGPU Mode: on')
+    # Check if Nvidia exists on PCI bus
     cmd = 'lspci | grep -i nvidia'
     p = subprocess.run(cmd, shell=True, stdout=subprocess.DEVNULL)
     if p.returncode == 0:
@@ -34,17 +38,10 @@ def _query_dgpu():
     else:
         print('PCI: Nvidia dGPU not detected')
 
-def _check_files():
-    blacklist = os.path.isfile(envs.BLACKLIST_PATH)
-    rules = os.path.isfile(envs.UDEV_PATH)
-    return blacklist, rules
-
-def _switch_mode(mode):
-    print(f'Mode is: {mode}')
-
 def _show_version():
-    print(f'EnvyControl version: {envs.VERSION}')
-
+    print(f'EnvyControl version: {VERSION}')
+    print('https://github.com/geminis3/EnvyControl\n')
+    print('(C) 2021 Victor Bayas')
 
 if __name__ == '__main__':
     main()

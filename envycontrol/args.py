@@ -10,7 +10,7 @@ def parse_args():
                             ' Supported modes: on | off')
     parser.add_argument('-v', '--version', action='store_true', help='Print version and exit')
 
-    # if no argument is provided then display help and exit
+    # If no argument is provided then display help and exit
     if len(sys.argv)==1:
         parser.print_help()
         sys.exit(1)

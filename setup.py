@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
-from envycontrol import envs
+from envycontrol.envs import VERSION
 setup(
     name = 'EnvyControl',
-    version = envs.VERSION,
+    version = VERSION,
     description = 'Enable or disable your Nvidia dGPU',
     url = 'https://github.com/geminis3/EnvyControl',
     author = 'Victor Bayas',
