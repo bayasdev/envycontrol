@@ -20,7 +20,6 @@ def switch_off():
     try:
         # Blacklist all Nvidia related modules
         with open(BLACKLIST_PATH, mode='w', encoding='utf-8') as f:
-            print(os.path.realpath(f.name))
             f.write(BLACKLIST_CONTENT)
         # Power off the Nvidia card at startup with Udev rules
         with open(UDEV_PATH, mode='w', encoding='utf-8') as f:
