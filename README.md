@@ -92,7 +92,7 @@ The propietary driver implements dynamic power management (like Windows) only on
 
 Well, nouveau supports external screens on Wayland but it's laggy and prone to make your system crash.
 
-### Closing words
+## Closing words
 
 **Don't buy Nvidia hardware!**
 
