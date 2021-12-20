@@ -79,7 +79,8 @@ It works by creating a X.org config file with the Intel iGPU attached to an inac
 
 **The downsides are that you can't use Wayland, your battery will drain in a couple of minutes, the laptop will overheat even if doing nothing and the fans will go brrrrr.**
 
-**This is the recommended mode for working with external screens.**
+**This is the recommended mode for working with external screens, if tearing appears on external screens please use [nvidia-force-comp-pipeline
+](https://github.com/Askannz/nvidia-force-comp-pipeline).**
 
 ## hybrid
 
