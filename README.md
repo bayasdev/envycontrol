@@ -25,14 +25,14 @@ I don't own any device with this particular hardware combination (in theory `int
 
 Installation it's not required since you can directly run `envycontrol.py` from source, however for convenience sake you can install EnvyControl globally:
 
+## From the AUR
+
+Install [envycontrol](https://aur.archlinux.org/packages/envycontrol/) with the AUR helper of your choice.
+
 ## Using pip
 
 1. Clone or download this GitHub repository
 2. Run `sudo pip install .`
-
-## From the AUR
-
-Soon...
 
 # Usage
 
