@@ -85,7 +85,7 @@ It works by creating a X.org config file with the Intel iGPU attached to an inac
 
 This is the default behavior for both Nvidia and nouveau drivers, the dGPU can be accesed on-demand with `DRI_PRIME=1` for nouveau or `__NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=NVIDIA_only __GLX_VENDOR_LIBRARY_NAME=nvidia` for the propietary drivers.
 
-The propietary driver implements dynamic power management (like Windows) only on Turing and newer cards paired with Intel 8th+ gen processors. Read the official documentation to enable it if you're eligible.
+The propietary driver implements dynamic power management (like Windows) only on Turing and newer cards paired with Intel 8th+ gen processors. [Read the official documentation to enable it if you're eligible.](http://us.download.nvidia.com/XFree86/Linux-x86_64/495.46/README/dynamicpowermanagement.html)
 
 **The downsides are poor battery life on cards that don't support dynamic power management (like mine), external screens are laggy due to a broken reverse PRIME implementation on X.org and Wayland crashes if an external screen is connected (tested on Gnome).**
 
