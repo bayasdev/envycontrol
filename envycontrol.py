@@ -208,7 +208,7 @@ def _setup_display_manager(display_manager):
         except Exception as e:
             print(f'Error: {e}')
             sys.exit(1)
-        subprocess.run(f'chmod +x {SDDM_SCRIPT_PATH}')
+        subprocess.run(['chmod','+x',SDDM_SCRIPT_PATH], stdout=subprocess.DEVNULL)
     if display_manager == 'lightdm':
         try:
             with open(LIGHTDM_SCRIPT_PATH, mode='w', encoding='utf-8') as f:
@@ -216,15 +216,14 @@ def _setup_display_manager(display_manager):
         except Exception as e:
             print(f'Error: {e}')
             sys.exit(1)
-        subprocess.run(f'chmod +x {LIGHTDM_SCRIPT_PATH}')
+        subprocess.run(['chmod','+x',LIGHTDM_SCRIPT_PATH], stdout=subprocess.DEVNULL)
 
 def _rebuild_initramfs():
     # Debian and its derivatives require rebuilding the initramfs after switching modes
     is_debian = os.path.exists('/etc/debian_version')
     if is_debian:
-        cmd = 'update-initramfs -u -k all'
         print('Rebuilding initramfs...')
-        p = subprocess.run(cmd)
+        p = subprocess.run(['update-initramfs', '-u', '-k', 'all'], stdout=subprocess.DEVNULL)
         if p.returncode == 0:
             print('Successfully rebuilt initramfs!')
         else:
