@@ -84,7 +84,7 @@ It works by creating a X.org config file with the Intel iGPU attached to an inac
 
 ### hybrid
 
-This is the default behavior for both Nvidia and nouveau drivers, the dGPU can be accesed on-demand with `DRI_PRIME=1` for nouveau or `__NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=NVIDIA_only __GLX_VENDOR_LIBRARY_NAME=nvidia` for the propietary driver.
+This is the default behavior for both Nvidia and nouveau drivers, the dGPU can be accesed on-demand with `DRI_PRIME=1 <command>` for nouveau or `__NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=NVIDIA_only __GLX_VENDOR_LIBRARY_NAME=nvidia <command>` for the propietary driver.
 
 The propietary driver implements dynamic power management (like Windows) only on Turing and newer cards paired with Intel 8th gen or newer processors. [Read the official documentation to enable it if you're eligible.](http://us.download.nvidia.com/XFree86/Linux-x86_64/495.46/README/dynamicpowermanagement.html)
 
