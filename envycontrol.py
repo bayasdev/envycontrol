@@ -173,6 +173,18 @@ def _file_remover():
         if e.errno != 2:
             print(f'Error: {e}')
             sys.exit(1)
+    try:
+        os.remove(SDDM_SCRIPT_PATH)
+    except OSError as e:
+        if e.errno != 2:
+            print(f'Error: {e}')
+            sys.exit(1)
+    try:
+        os.remove(LIGHTDM_SCRIPT_PATH)
+    except OSError as e:
+        if e.errno != 2:
+            print(f'Error: {e}')
+            sys.exit(1)
 
 def _check_display_manager():
     # automatically detect the current Display Manager
@@ -186,18 +198,6 @@ def _check_display_manager():
         display_manager = ''
     finally:
         return display_manager
-
-def _rebuild_initramfs():
-    # Debian and its derivatives require rebuilding the initramfs after switching modes
-    is_debian = os.path.exists('/etc/debian_release')
-    if is_debian:
-        cmd = 'update-initramfs -u -k all'
-        print('Rebuilding initramfs...')
-        p = subprocess.run(cmd)
-        if p.returncode == 0:
-            print('Successfully rebuilt initramfs!')
-        else:
-            print('Error: an error ocurred rebuilding the initramfs')
 
 def _setup_display_manager(display_manager):
     # setup the Xrandr script if necessary
@@ -217,6 +217,18 @@ def _setup_display_manager(display_manager):
             print(f'Error: {e}')
             sys.exit(1)
         subprocess.run(f'chmod +x {LIGHTDM_SCRIPT_PATH}')
+
+def _rebuild_initramfs():
+    # Debian and its derivatives require rebuilding the initramfs after switching modes
+    is_debian = os.path.exists('/etc/debian_version')
+    if is_debian:
+        cmd = 'update-initramfs -u -k all'
+        print('Rebuilding initramfs...')
+        p = subprocess.run(cmd)
+        if p.returncode == 0:
+            print('Successfully rebuilt initramfs!')
+        else:
+            print('Error: an error ocurred rebuilding the initramfs')
 
 def _switcher(mode):
     # exit if not running as root
