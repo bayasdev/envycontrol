@@ -4,7 +4,7 @@ EnvyControl is an opensource program aimed to provide an easy way to switch GPU 
 
 ### License
 
-Envycontrol is licensed under the MIT license which is a permissive, free and opensource license(see <a href="https://github.com/geminis3/envycontrol/blob/main/LICENSE">LICENSE</a>)
+Envycontrol is licensed under the MIT license which is a permissive, free software license(see <a href="https://github.com/geminis3/envycontrol/blob/main/LICENSE">LICENSE</a>)
 
 ### Compatible distros 🐧
 
