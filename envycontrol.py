@@ -190,6 +190,12 @@ def _file_remover():
         if e.errno != 2:
             print(f'Error: {e}')
             sys.exit(1)
+    try:
+        os.remove(LIGHTDM_CONFIG_PATH)
+    except OSError as e:
+        if e.errno != 2:
+            print(f'Error: {e}')
+            sys.exit(1)
     
 
 def _check_display_manager():
