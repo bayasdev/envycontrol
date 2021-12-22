@@ -23,6 +23,14 @@ On Debian and Ubuntu derivates the initramfs is rebuilt automatically after swit
 
 Other display managers might require manual configuration.
 
+### Supported graphics modes 🖼
+
+- integrated
+- nvidia
+- hybrid
+
+Read a detailed explanation [here](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#graphics-modes-explained).
+
 ### Tested devices 💻
 
 - Acer Predator Helios 300 2017 (G3-571)
@@ -80,7 +88,7 @@ envycontrol --status
 
 ## Frequently Asked Questions ❓
 
-Yes, [see here](https://github.com/geminis3/EnvyControl/wiki/Frequently-Asked-Questions).
+Yes, [see here](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions).
 
 ## I found a bug 🐞
 

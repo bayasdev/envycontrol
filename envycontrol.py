@@ -51,12 +51,6 @@ Section "ServerLayout"
     Inactive "intel"
 EndSection
 
-Section "Screen"
-    Identifier "nvidia"
-    Device "nvidia"
-    Option "AllowEmptyInitialConfiguration"
-EndSection
-
 Section "Device"
     Identifier "nvidia"
     Driver "nvidia"
@@ -64,13 +58,19 @@ Section "Device"
 EndSection
 
 Section "Screen"
-    Identifier "intel"
-    Device "intel"
+    Identifier "nvidia"
+    Device "nvidia"
+    Option "AllowEmptyInitialConfiguration"
 EndSection
 
 Section "Device"
     Identifier "intel"
     Driver "modesetting"
+EndSection
+
+Section "Screen"
+    Identifier "intel"
+    Device "intel"
 EndSection
 '''
 
