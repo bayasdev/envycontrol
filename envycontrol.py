@@ -202,11 +202,11 @@ def _check_display_manager():
     # automatically detect the current Display Manager
     # this depends on systemd
     pattern = re.compile(r'(?<=/usr/bin/).*|(?<=/usr/sbin/).*')
-    display_manager = ''
     try:
         with open('/etc/systemd/system/display-manager.service',mode='r', encoding='utf-8') as f:
             display_manager = pattern.findall(f.read())[0]
     except Exception:
+        display_manager = ''
         print('Warning: automatic Display Manager detection is not available')
     finally:
         return display_manager
@@ -238,7 +238,7 @@ def _setup_display_manager(display_manager):
                 sys.exit(1)
         with open(LIGHTDM_CONFIG_PATH, mode='w', encoding='utf-8') as f:
                     f.write(LIGHTDM_CONFIG_CONTENT)
-    elif display_manager != ('' or 'gdm' or 'gdm3'):
+    elif display_manager not in ['', 'gdm', 'gdm3']:
         print('Error: provided Display Manager is not valid')
         print('Supported Display Managers: gdm, sddm, lightdm')
         sys.exit(1)
