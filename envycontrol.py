@@ -233,11 +233,11 @@ def _setup_display_manager(display_manager):
         if not os.path.exists(os.path.dirname(LIGHTDM_CONFIG_PATH)):
             try:
                 os.makedirs(os.path.dirname(LIGHTDM_CONFIG_PATH))
-                with open(LIGHTDM_CONFIG_PATH, mode='w', encoding='utf-8') as f:
-                    f.write(LIGHTDM_CONFIG_CONTENT)
             except Exception as e:
                 print(f'Error: {e}')
                 sys.exit(1)
+        with open(LIGHTDM_CONFIG_PATH, mode='w', encoding='utf-8') as f:
+                    f.write(LIGHTDM_CONFIG_CONTENT)
     elif display_manager != ('' or 'gdm' or 'gdm3'):
         print('Error: provided Display Manager is not valid')
         print('Supported Display Managers: gdm, sddm, lightdm')
