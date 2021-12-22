@@ -21,7 +21,7 @@ On Debian and Ubuntu derivates the initramfs is rebuilt automatically after swit
 - SDDM
 - LightDM
 
-Other display managers might require manual configuration.
+Other display managers might require [manual configuration](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#what-to-do-if-my-display-manager-is-not-supported-%EF%B8%8F).
 
 ### Supported graphics modes 🖼
 
@@ -29,7 +29,7 @@ Other display managers might require manual configuration.
 - nvidia
 - hybrid
 
-Read a detailed explanation [here](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#graphics-modes-explained).
+Read a detailed explanation [here](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#what-to-do-if-my-display-manager-is-not-supported-%EF%B8%8F).
 
 ### Tested devices 💻
 
@@ -88,7 +88,7 @@ envycontrol --status
 
 ## Frequently Asked Questions ❓
 
-Yes, [see here](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions).
+Of course, [see here](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions).
 
 ## I found a bug 🐞
 
