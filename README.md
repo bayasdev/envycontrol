@@ -2,6 +2,10 @@
 
 EnvyControl is an opensource program aimed to provide an easy way to switch GPU modes on Nvidia Optimus systems (i.e laptops with Intel + Nvidia or AMD + Nvidia configurations) under Linux.
 
+### License
+
+Envycontrol is licensed under the MIT license which is a permissive, free and opensource license(see <a href="https://github.com/geminis3/envycontrol/blob/main/LICENSE">LICENSE</a>)
+
 ### Compatible distros 🐧
 
 **This program was originally developed for Arch Linux** but it should work on any other Linux distribution.
