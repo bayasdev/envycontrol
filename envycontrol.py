@@ -116,6 +116,8 @@ def main():
     parser.add_argument('--status', action='store_true', help='Query the current graphics mode set by EnvyControl')
     parser.add_argument('--switch', type=str, metavar='MODE', action='store',
                         help='Switch the graphics mode. You need to reboot for changes to apply. Supported modes: integrated, nvidia, hybrid')
+    parser.add_argument('--dm', type=str, metavar='DISPLAY_MANAGER', action='store',
+                        help='Manually specify your Display Manager. This is required only for systems without systemd. Supported DMs: gdm, sddm, lightdm')
     parser.add_argument('--version', '-v', action='store_true', help='Print the current version and exit')
 
     # print help if no arg is provided
@@ -130,7 +132,14 @@ def main():
     elif args.version:
         _print_version()
     elif args.switch:
-        _switcher(args.switch)
+        if args.dm and args.switch == 'nvidia':
+            _switcher(args.switch, args.dm)
+        else:
+            _switcher(args.switch)
+    elif args.dm and not args.switch:
+        print('Error: this option is intended to be used with --switch nvidia')
+        print('Example: sudo envycontrol --switch nvidia --dm sddm')
+        sys.exit(1)
 
 def _check_root():
     if not os.geteuid() == 0:
@@ -209,7 +218,7 @@ def _setup_display_manager(display_manager):
             print(f'Error: {e}')
             sys.exit(1)
         subprocess.run(['chmod','+x',SDDM_SCRIPT_PATH], stdout=subprocess.DEVNULL)
-    if display_manager == 'lightdm':
+    elif display_manager == 'lightdm':
         try:
             with open(LIGHTDM_SCRIPT_PATH, mode='w', encoding='utf-8') as f:
                 f.write(XRANDR_SCRIPT)
@@ -217,6 +226,10 @@ def _setup_display_manager(display_manager):
             print(f'Error: {e}')
             sys.exit(1)
         subprocess.run(['chmod','+x',LIGHTDM_SCRIPT_PATH], stdout=subprocess.DEVNULL)
+    elif display_manager != ('gdm' or 'gdm3'):
+        print('Error: provided Display Manager is not valid')
+        print('Supported Display Managers: gdm, sddm, lightdm')
+        sys.exit(1)
 
 def _rebuild_initramfs():
     # Debian and its derivatives require rebuilding the initramfs after switching modes
@@ -229,7 +242,7 @@ def _rebuild_initramfs():
         else:
             print('Error: an error ocurred rebuilding the initramfs')
 
-def _switcher(mode):
+def _switcher(mode, display_manager = ''):
     # exit if not running as root
     _check_root()
 
@@ -249,7 +262,9 @@ def _switcher(mode):
     
     elif mode == 'nvidia':
         _file_remover()
-        display_manager = _check_display_manager()
+        # detect Display Manager if not provided
+        if display_manager == '':
+            display_manager = _check_display_manager()
         _setup_display_manager(display_manager)
         try:
             # create X.org config
