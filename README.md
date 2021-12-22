@@ -10,11 +10,13 @@ On Debian and Ubuntu derivates the initramfs is rebuilt automatically after swit
 
 ### Compatible display managers 🖥
 
+The following display managers are currently compatible with envycontrol : 
+
 - GDM
 - SDDM
 - LightDM
 
-Other display managers might require [manual configuration](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#what-to-do-if-my-display-manager-is-not-supported-%EF%B8%8F).
+If your display manager isn't currently supported by envycontrol, you might have to [manually configure it](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#what-to-do-if-my-display-manager-is-not-supported-%EF%B8%8F).
 
 ### Supported graphics modes 🖼
 
@@ -41,10 +43,14 @@ I don't own any device with this particular hardware combination (in theory `int
 Install the [envycontrol](https://aur.archlinux.org/packages/envycontrol/) package with the AUR helper of your choice. If not on Arch Linux you would have to:
 
 - Run `git clone https://github.com/geminis3/envycontrol.git` in a terminal window or install the tarball from the release page
-- After you have cloned the repository, you can run `sudo python envycontrol.py --switch <MODE>` in the root of the repository to switch the graphic mode.
+- Run `sudo python envycontrol.py --switch <MODE>` in the root of the repository to switch to a different graphic mode.
+ <br>
+ <br>
  OR
-- Extract the tarball with `tar -xvf <file>`
-- And running '`sudo python envycontrol.py --switch <MODE>` to switch graphic modes.
+ <br>
+ <br>
+- Extract the tarball with `tar -xvf envycontrol-<version>.tar.gz`
+- And run '`sudo python envycontrol.py --switch <MODE>` to switch graphic modes.
 
 ## Usage 📖
 
@@ -87,13 +93,14 @@ envycontrol --status
 
 ## Frequently Asked Questions ❓
 
-Of course, [see here](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions).
+[See here](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions).
 
-## I found a bug 🐞
+## What to do if you have found a bug 🐞
 
 Feel free to open an issue, don't forget to provide some basic info.
 
 - Linux distribution
+- Linux Kernel version
 - Desktop Environment or Window Manager as well as your Display Manager
 - Nvidia drivers version
 - EnvyControl version
