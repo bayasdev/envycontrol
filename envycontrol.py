@@ -47,9 +47,20 @@ XORG_CONTENT = '''# Do not modify this file
 
 Section "ServerLayout"
     Identifier "layout"
-    Screen "nvidia"
+    Screen 0 "nvidia"
     Inactive "intel"
-    Inactive "modesetting"
+EndSection
+
+Section "Screen"
+    Identifier "nvidia"
+    Device "nvidia"
+    Option "AllowEmptyInitialConfiguration"
+EndSection
+
+Section "Device"
+    Identifier "nvidia"
+    Driver "nvidia"
+    BusID "PCI:1:0:0"
 EndSection
 
 Section "Screen"
@@ -59,31 +70,7 @@ EndSection
 
 Section "Device"
     Identifier "intel"
-    Driver "intel"
-EndSection
-
-Section "Screen"
-    Identifier "modesetting"
-    Device "modesetting"
-EndSection
-
-Section "Device"
-    Identifier "modesetting"
     Driver "modesetting"
-EndSection
-
-Section "Screen"
-    Identifier "nvidia"
-    Device "nvidia"
-EndSection
-
-Section "Device"
-    Identifier "nvidia"
-    Driver "nvidia"
-    BusID "PCI:1:0:0"
-    Option "DPI" "96 x 96"
-    Option "AllowEmptyInitialConfiguration"
-    Option "AllowExternalGpus"
 EndSection
 '''
 
@@ -226,7 +213,7 @@ def _setup_display_manager(display_manager):
             print(f'Error: {e}')
             sys.exit(1)
         subprocess.run(['chmod','+x',LIGHTDM_SCRIPT_PATH], stdout=subprocess.DEVNULL)
-    elif display_manager != ('gdm' or 'gdm3'):
+    elif display_manager != ('' or 'gdm' or 'gdm3'):
         print('Error: provided Display Manager is not valid')
         print('Supported Display Managers: gdm, sddm, lightdm')
         sys.exit(1)
