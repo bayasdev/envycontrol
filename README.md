@@ -48,12 +48,10 @@ Install the [envycontrol](https://aur.archlinux.org/packages/envycontrol/) packa
 
 - Run `git clone https://github.com/geminis3/envycontrol.git` in a terminal window or install the tarball from the release page
 - Run `sudo python envycontrol.py --switch <MODE>` in the root of the repository to switch to a different graphic mode.
- <br>
- <br>
+ 
  OR
- <br>
- <br>
-- Extract the tarball with `tar -xvf envycontrol-<version>.tar.gz`
+ 
+- Extract the tarball with `tar -xvf envycontrol-version.tar.gz`
 - And run '`sudo python envycontrol.py --switch <MODE>` to switch graphic modes.
 
 ## Usage 📖
@@ -104,7 +102,6 @@ envycontrol --status
 Feel free to open an issue, don't forget to provide some basic info.
 
 - Linux distribution
-- Linux Kernel version
 - Desktop Environment or Window Manager as well as your Display Manager
 - Nvidia drivers version
 - EnvyControl version
