@@ -44,7 +44,17 @@ I don't own any device with this particular hardware combination (in theory `int
 
 ## Get EnvyControl ⬇️
 
-Install the [envycontrol](https://aur.archlinux.org/packages/envycontrol/) package with the AUR helper of your choice. If not on Arch Linux you would have to:
+If you're on archlinux, you can install the [envycontrol](https://aur.archlinux.org/packages/envycontrol/) by running:
+
+- `git clone https://aur.archlinux.org/envycontrol.git`
+- `cd /path/to/envycontrol`
+- `makepkg -si`
+
+OR
+
+- `paru -S envycontrol` or by using your aur helper of choice
+
+Install the  package with the AUR helper of your choice. If not on Arch Linux you would have to:
 
 - Run `git clone https://github.com/geminis3/envycontrol.git` in a terminal window or install the tarball from the release page
 - Run `sudo python envycontrol.py --switch <MODE>` in the root of the repository to switch to a different graphic mode.
