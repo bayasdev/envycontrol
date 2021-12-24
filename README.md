@@ -1,6 +1,6 @@
 # EnvyControl
 
-EnvyControl is an program aimed to provide an easy way to switch GPU modes on Nvidia Optimus systems (i.e laptops with Intel + Nvidia or AMD + Nvidia configurations) under Linux.
+EnvyControl is a program aimed to provide an easy way to switch GPU modes on Nvidia Optimus systems (i.e laptops with Intel + Nvidia or AMD + Nvidia configurations) under Linux.
 
 ### License
 
@@ -44,7 +44,7 @@ I don't own any device with this particular hardware combination (in theory `int
 
 ## Get EnvyControl ⬇️
 
-If you're on archlinux, you can install the [envycontrol](https://aur.archlinux.org/packages/envycontrol/) by running:
+If you're on archlinux, you can install the [envycontrol](https://aur.archlinux.org/packages/envycontrol/) package from AUR by running:
 
 - `git clone https://aur.archlinux.org/envycontrol.git`
 - `cd /path/to/envycontrol`
@@ -52,9 +52,9 @@ If you're on archlinux, you can install the [envycontrol](https://aur.archlinux.
 
 OR
 
-- `paru -S envycontrol` or by using your aur helper of choice
+- `paru -S envycontrol` or by using the aur helper of your choice
 
-Install the  package with the AUR helper of your choice. If not on Arch Linux you would have to:
+If not on Arch Linux, you would have to:
 
 - Run `git clone https://github.com/geminis3/envycontrol.git` in a terminal window or install the tarball from the release page
 - Run `sudo python envycontrol.py --switch <MODE>` in the root of the repository to switch to a different graphic mode.
@@ -62,7 +62,7 @@ Install the  package with the AUR helper of your choice. If not on Arch Linux yo
  OR
  
 - Extract the tarball with `tar -xvf envycontrol-version.tar.gz`
-- And run '`sudo python envycontrol.py --switch <MODE>` to switch graphic modes.
+- And run `sudo python envycontrol.py --switch <MODE>` to switch graphic modes.
 
 ## Usage 📖
 
