@@ -1,13 +1,10 @@
 # EnvyControl
 
-```
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED
-```
-
-## Introduction ℹ️
-
 EnvyControl is a program aimed to provide an easy way to switch GPU modes on Nvidia Optimus systems (i.e laptops with Intel + Nvidia or AMD + Nvidia configurations) under Linux.
+
+### License
+
+Envycontrol is licensed under the MIT license which is a permissive, free software license(see <a href="https://github.com/geminis3/envycontrol/blob/main/LICENSE">LICENSE</a>)
 
 ### Compatible distros 🐧
 
@@ -17,11 +14,13 @@ On Debian and Ubuntu derivates the initramfs is rebuilt automatically after swit
 
 ### Compatible display managers 🖥
 
+The following display managers are currently compatible with envycontrol : 
+
 - GDM
 - SDDM
 - LightDM
 
-Other display managers might require [manual configuration](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#what-to-do-if-my-display-manager-is-not-supported-%EF%B8%8F).
+If your display manager isn't currently supported by envycontrol, you might have to [manually configure it](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#what-to-do-if-my-display-manager-is-not-supported-%EF%B8%8F).
 
 ### Supported graphics modes 🖼
 
@@ -45,7 +44,25 @@ I don't own any device with this particular hardware combination (in theory `int
 
 ## Get EnvyControl ⬇️
 
-Install the [envycontrol](https://aur.archlinux.org/packages/envycontrol/) package with the AUR helper of your choice. If not on Arch Linux you can run `envycontrol.py` from source.
+If you're on archlinux, you can install the [envycontrol](https://aur.archlinux.org/packages/envycontrol/) package from AUR by running:
+
+- `git clone https://aur.archlinux.org/envycontrol.git`
+- `cd /path/to/envycontrol`
+- `makepkg -si`
+
+OR
+
+- `paru -S envycontrol` or by using the aur helper of your choice
+
+If not on Arch Linux, you would have to:
+
+- Run `git clone https://github.com/geminis3/envycontrol.git` in a terminal window or install the tarball from the release page
+- Run `sudo python envycontrol.py --switch <MODE>` in the root of the repository to switch to a different graphic mode.
+ 
+ OR
+ 
+- Extract the tarball with `tar -xvf envycontrol-version.tar.gz`
+- And run `sudo python envycontrol.py --switch <MODE>` to switch graphic modes.
 
 ## Usage 📖
 
@@ -88,9 +105,9 @@ envycontrol --status
 
 ## Frequently Asked Questions ❓
 
-Of course, [see here](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions).
+[See here](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions).
 
-## I found a bug 🐞
+## What to do if you have found a bug 🐞
 
 Feel free to open an issue, don't forget to provide some basic info.
 
