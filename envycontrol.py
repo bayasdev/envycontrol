@@ -54,7 +54,7 @@ EndSection
 Section "Device"
     Identifier "nvidia"
     Driver "nvidia"
-    BusID "PCI:1:0:0"
+    BusID "PCI:{}"
 EndSection
 
 Section "Screen"
@@ -196,7 +196,18 @@ def _file_remover():
         if e.errno != 2:
             print(f'Error: {e}')
             sys.exit(1)
-    
+
+def _get_pci_bus():
+    # dynamically detect the PCI bus of the Nvidia dGPU
+    # exit if not found
+    pattern = re.compile(r'([0-9]{2}:[0-9a-z]{2}.[0-9]).(VGA compatible controller: NVIDIA)')
+    lspci = subprocess.run(['lspci'], capture_output=True, text=True).stdout
+    try:
+        # X.org requires PCI:X:X:X format
+        return ':'.join([str(int(element)) for element in pattern.findall(lspci)[0][0].replace('.', ':').split(':')])
+    except Exception:
+        print('Error: could not find Nvidia GPU on PCI bus, please switch to hybrid mode first')
+        sys.exit(1)
 
 def _check_display_manager():
     # automatically detect the current Display Manager
@@ -274,6 +285,8 @@ def _switcher(mode, display_manager = ''):
     
     elif mode == 'nvidia':
         _file_remover()
+        # get the Nvidia dGPU PCI bus first
+        pci_bus = _get_pci_bus()
         # detect Display Manager if not provided
         if display_manager == '':
             display_manager = _check_display_manager()
@@ -281,7 +294,7 @@ def _switcher(mode, display_manager = ''):
         try:
             # create X.org config
             with open(XORG_PATH, mode='w', encoding='utf-8') as f:
-                f.write(XORG_CONTENT)
+                f.write(XORG_CONTENT.format(pci_bus))
             # modeset for Nvidia driver is required to prevent tearing on internal screen
             with open(NVIDIA_MODESET_PATH, mode='w', encoding='utf-8') as f:
                 f.write(NVIDIA_MODESET_CONTENT)
