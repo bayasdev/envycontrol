@@ -40,7 +40,7 @@ Read a detailed explanation [here](https://github.com/geminis3/envycontrol/wiki/
 
 ### A note on AMD + Nvidia systems
 
-I don't own any device with this particular hardware combination (in theory `integrated` and `hybrid` modes should work), please contact me if you do.
+I don't own any device with this hardware combination, however experimental support for AMD systems under `nvidia` mode has been added. **Please send me your feedback.**
 
 ## Get EnvyControl
 
