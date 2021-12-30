@@ -7,7 +7,7 @@ import subprocess
 
 # constants declaration
 
-VERSION = '1.1'
+VERSION = '1.2'
 
 # for integrated mode
 
