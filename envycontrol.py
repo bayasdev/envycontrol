@@ -140,36 +140,6 @@ display-setup-script=/etc/lightdm/nvidia.sh
 
 # function declaration
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--status', action='store_true', help='Query the current graphics mode set by EnvyControl')
-    parser.add_argument('--switch', type=str, metavar='MODE', action='store',
-                        help='Switch the graphics mode. You need to reboot for changes to apply. Supported modes: integrated, nvidia, hybrid')
-    parser.add_argument('--dm', type=str, metavar='DISPLAY_MANAGER', action='store',
-                        help='Manually specify your Display Manager. This is required only for systems without systemd. Supported DMs: gdm, sddm, lightdm')
-    parser.add_argument('--version', '-v', action='store_true', help='Print the current version and exit')
-
-    # print help if no arg is provided
-    if len(sys.argv)==1:
-        parser.print_help()
-        sys.exit(1)
-    
-    args = parser.parse_args()
-
-    if args.status:
-        _check_status()
-    elif args.version:
-        _print_version()
-    elif args.switch:
-        if args.dm and args.switch == 'nvidia':
-            _switcher(args.switch, args.dm)
-        else:
-            _switcher(args.switch)
-    elif args.dm and not args.switch:
-        print('Error: this option is intended to be used with --switch nvidia')
-        print('Example: sudo envycontrol --switch nvidia --dm sddm')
-        sys.exit(1)
-
 def _check_root():
     if not os.geteuid() == 0:
         print('Error: this operation requires root privileges')
@@ -246,7 +216,7 @@ def _get_igpu_vendor():
 def _get_pci_bus():
     # dynamically get the PCI bus of the Nvidia dGPU
     # exit if not found
-    pattern = re.compile(r'([0-9]{2}:[0-9a-z]{2}.[0-9]).(VGA compatible controller: NVIDIA)')
+    pattern = re.compile(r'([0-9]{2}:[0-9a-z]{2}.[0-9]).*(VGA compatible controller: NVIDIA|3D controller: NVIDIA)')
     lspci = subprocess.run(['lspci'], capture_output=True, text=True).stdout
     try:
         # X.org requires PCI:X:X:X format
@@ -258,10 +228,10 @@ def _get_pci_bus():
 def _check_display_manager():
     # automatically detect the current Display Manager
     # this depends on systemd
-    pattern = re.compile(r'(?<=/usr/bin/).*|(?<=/usr/sbin/).*')
+    pattern = re.compile(r'(\/usr\/bin\/|\/usr\/sbin\/)(.*)')
     try:
         with open('/etc/systemd/system/display-manager.service',mode='r', encoding='utf-8') as f:
-            display_manager = pattern.findall(f.read())[0]
+            display_manager = pattern.findall(f.read())[0][1]
     except Exception:
         display_manager = ''
         print('Warning: automatic Display Manager detection is not available')
@@ -370,6 +340,36 @@ def _switcher(mode, display_manager = ''):
 
 def _print_version():
         print(f'EnvyControl {VERSION}')
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--status', action='store_true', help='Query the current graphics mode set by EnvyControl')
+    parser.add_argument('--switch', type=str, metavar='MODE', action='store',
+                        help='Switch the graphics mode. You need to reboot for changes to apply. Supported modes: integrated, nvidia, hybrid')
+    parser.add_argument('--dm', type=str, metavar='DISPLAY_MANAGER', action='store',
+                        help='Manually specify your Display Manager. This is required only for systems without systemd. Supported DMs: gdm, sddm, lightdm')
+    parser.add_argument('--version', '-v', action='store_true', help='Print the current version and exit')
+
+    # print help if no arg is provided
+    if len(sys.argv)==1:
+        parser.print_help()
+        sys.exit(1)
+    
+    args = parser.parse_args()
+
+    if args.status:
+        _check_status()
+    elif args.version:
+        _print_version()
+    elif args.switch:
+        if args.dm and args.switch == 'nvidia':
+            _switcher(args.switch, args.dm)
+        else:
+            _switcher(args.switch)
+    elif args.dm and not args.switch:
+        print('Error: this option is intended to be used with --switch nvidia')
+        print('Example: sudo envycontrol --switch nvidia --dm sddm')
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()
