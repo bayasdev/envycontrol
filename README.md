@@ -10,7 +10,9 @@ Envycontrol is licensed under the MIT license which is a permissive, free softwa
 
 **This program was originally developed for Arch Linux** but it should work on any other Linux distribution.
 
-On Debian and Ubuntu derivates the initramfs is rebuilt automatically after switching modes.
+For a detailed list of tested distros [see here](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#tested-distros).
+
+**If you're using Ubuntu please [read this](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#a-note-for-ubuntu-users).**
 
 ### Compatible display managers
 
@@ -20,7 +22,7 @@ The following display managers are currently compatible with envycontrol :
 - SDDM
 - LightDM
 
-If your display manager isn't currently supported by envycontrol, you might have to [manually configure it](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#what-to-do-if-my-display-manager-is-not-supported).
+If your display manager isn't currently supported by EnvyControl, you might have to [manually configure it](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#what-to-do-if-my-display-manager-is-not-supported).
 
 ### Supported graphics modes
 
@@ -30,21 +32,13 @@ If your display manager isn't currently supported by envycontrol, you might have
 
 Read a detailed explanation [here](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#graphics-modes-explained).
 
-### Tested devices
-
-- Acer Predator Helios 300 2017 (G3-571)
-    - CPU: Intel Core i7-7700HQ
-    - iGPU: Intel HD630
-    - dGPU: Nvidia GTX 1060
-    - OS: Arch Linux with Gnome
-
 ### A note on AMD + Nvidia systems
 
 I don't own any device with this hardware combination, however experimental support for AMD systems under `nvidia` mode has been added. **Please send me your feedback.**
 
 ## Get EnvyControl
 
-If you're on archlinux, you can install the [envycontrol](https://aur.archlinux.org/packages/envycontrol/) package from AUR by running:
+If you're on Arch Linux, you can install the [envycontrol](https://aur.archlinux.org/packages/envycontrol/) package from AUR by running:
 
 - `git clone https://aur.archlinux.org/envycontrol.git`
 - `cd /path/to/envycontrol`
@@ -56,7 +50,7 @@ OR
 
 If not on Arch Linux, you would have to:
 
-- Run `git clone https://github.com/geminis3/envycontrol.git` in a terminal window or install the tarball from the release page
+- Run `git clone https://github.com/geminis3/envycontrol.git` in a terminal window or install the tarball from the releases page.
 - Run `sudo python envycontrol.py --switch <MODE>` in the root of the repository to switch to a different graphic mode.
  
  OR
