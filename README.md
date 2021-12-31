@@ -14,9 +14,7 @@ For a detailed list of tested distros [see here](https://github.com/geminis3/env
 
 **If you're using Ubuntu please [read this](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#a-note-for-ubuntu-users).**
 
-### Compatible display managers
-
-The following display managers are currently compatible with envycontrol : 
+### Supported display managers 
 
 - GDM
 - SDDM
@@ -38,25 +36,32 @@ I don't own any device with this hardware combination, however experimental supp
 
 ## Get EnvyControl
 
-If you're on Arch Linux, you can install the [envycontrol](https://aur.archlinux.org/packages/envycontrol/) package from AUR by running:
+### Arch Linux and its derivatives
 
-- `git clone https://aur.archlinux.org/envycontrol.git`
-- `cd /path/to/envycontrol`
-- `makepkg -si`
+Install the [envycontrol](https://aur.archlinux.org/packages/envycontrol/) package from the AUR manually or by using an AUR helper:
 
-OR
+```
+# with Paru
+paru -S envycontrol
 
-- `paru -S envycontrol` or by using the aur helper of your choice
+# with Yay
+yay -S envycontrol
 
-If not on Arch Linux, you would have to:
+# with Pamac (Manjaro)
+pamac install envycontrol
+```
 
-- Run `git clone https://github.com/geminis3/envycontrol.git` in a terminal window or install the tarball from the releases page.
-- Run `sudo python envycontrol.py --switch <MODE>` in the root of the repository to switch to a different graphic mode.
+Now you can run `sudo envycontrol --switch <MODE>` to switch graphics modes.
+
+### Other distros
+
+- Clone this repository with `git clone https://github.com/geminis3/envycontrol.git` or download the latest tarball from the releases page.
+- Run `sudo python envycontrol.py --switch <MODE>` from the root of the repository to switch to a different graphics mode. 
  
- OR
- 
-- Extract the tarball with `tar -xvf envycontrol-version.tar.gz`
-- And run `sudo python envycontrol.py --switch <MODE>` to switch graphic modes.
+You can also install EnvyControl globally as a pip package:
+
+- From the root of the cloned repository run `sudo pip install .`
+- Now you can run `sudo envycontrol --switch <MODE>` from any directory to switch graphics modes.
 
 ## Usage
 
