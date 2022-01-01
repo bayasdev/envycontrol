@@ -7,7 +7,7 @@ import subprocess
 
 # constants declaration
 
-VERSION = '1.2'
+VERSION = '1.2.1'
 
 # for integrated mode
 
@@ -20,6 +20,12 @@ blacklist nvidia
 blacklist nvidia_drm
 blacklist nvidia_uvm
 blacklist nvidia_modeset
+
+alias nouveau off
+alias nvidia off
+alias nvidia_drm off
+alias nvidia_uvm off
+alias nvidia_modeset off
 '''
 
 UDEV_PATH = '/lib/udev/rules.d/50-remove-nvidia.rules'
