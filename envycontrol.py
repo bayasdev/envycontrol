@@ -7,7 +7,7 @@ import subprocess
 
 # constants declaration
 
-VERSION = '1.2.1'
+VERSION = '1.3'
 
 # for integrated mode
 
@@ -334,6 +334,9 @@ def _switcher(mode, display_manager = ''):
         # remove all files created by other EnvyControl modes
         # Nvidia and nouveau drivers fallback to hybrid mode by default
         _file_remover()
+        # modeset for Nvidia driver is required for Wayland on hybrid mode
+        with open(NVIDIA_MODESET_PATH, mode='w', encoding='utf-8') as f:
+            f.write(NVIDIA_MODESET_CONTENT)
         _rebuild_initramfs()
         
     else:
