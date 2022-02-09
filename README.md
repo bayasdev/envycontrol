@@ -113,5 +113,5 @@ Feel free to open an issue, don't forget to provide some basic info.
 - Linux distribution
 - Linux kernel version and type
 - Desktop Environment or Window Manager as well as your Display Manager
-- Nvidia drivers version
+- Nvidia driver version
 - EnvyControl version
