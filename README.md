@@ -16,7 +16,7 @@ For a detailed list of tested distros [see here](https://github.com/geminis3/env
 
 ### Supported display managers 
 
-- GDM
+- GDM(see <a href="https://wiki.archlinux.org/title/Xorg#Using_GDM">Rootless Xorg</a> if xorg isn't running without root permissions)
 - SDDM
 - LightDM
 
