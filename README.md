@@ -24,16 +24,7 @@ If your display manager isn't currently supported by EnvyControl, you might have
 
 ### A note for GDM users
 
-Xorg might not run rootless when using nvidia drivers.
-This problem is mainly caused due to KMS for nvidia not being enabled.
-To enable it:
-
-Note : This fix only applies to systems which use grub as it's bootloader(see <a href="https://wiki.archlinux.org/title/Xorg#Using_GDM">Rootless Xorg</a> if xorg isn't running without root permissions for a wider solution)
-
-1. Open /etc/default/grub with a text editor by running `sudo <editor> /etc/default/grub`(sudo privileges are important for this command)
-2. Edit the line `GRUB_CMDLINE_LINUX=""` and add `nvidia-drm.modeset=1` to the empty quotation marks(there might be many lines of similar text, add it to the one which has empty quotation marks. It isn't recommend to edit the ones which already have text) You can also directly append this line `GRUB_CMDLINE_LINUX="nvidia-drm.modeset=1"` to the file.
-3. Run `grub-mkconfig -o /boot/grub/grub.cfg` to rebuild grub's config file
-4. Reboot. After rebooting, the problem shouldn't be present
+See <a href="https://github.com/DaVikingMan/EnvyControl/wiki/Fixes-for-some-common-problems">Fixes for some common problems</a>
 
 ### Supported graphics modes
 
