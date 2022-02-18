@@ -22,6 +22,10 @@ For a detailed list of tested distros [see here](https://github.com/geminis3/env
 
 If your display manager isn't currently supported by EnvyControl, you might have to [manually configure it](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#what-to-do-if-my-display-manager-is-not-supported).
 
+### A note for GDM users
+
+See <a href="https://github.com/DaVikingMan/EnvyControl/wiki/Fixes-for-some-common-problems">Fixes for some common problems</a>
+
 ### Supported graphics modes
 
 - integrated
@@ -111,6 +115,7 @@ envycontrol --status
 Feel free to open an issue, don't forget to provide some basic info.
 
 - Linux distribution
+- Linux kernel version and type
 - Desktop Environment or Window Manager as well as your Display Manager
-- Nvidia drivers version
+- Nvidia driver version
 - EnvyControl version
