@@ -1,0 +1,53 @@
+.TH "ENVYCONTROL" "8" "2022-01-24" "EnvyControl 1.3-1" "EnvyControl Manual"
+.nh
+.ad l
+.SH NAME
+EnvyControl \- Switch GPU modes on Nvidia Optimus Systems
+
+.SH SYNOPSIS
+\fIenvycontrol\fR <operation>
+.sp
+
+.SH DESCRIPTION
+EnvyControl is a program aimed to provide an easy way to switch GPU modes on Nvidia Optimus systems (i.e laptops with Intel + Nvidia or AMD + Nvidia configurations) under Linux.
+
+.SH ENVYCONTROL OPERATIONS
+.TP
+.B \-h, \-\-help
+Show this help message and exit.  
+
+.TP
+.B \-\-status
+Query the current graphics mode set by EnvyControl.
+
+.TP
+.B \-\-switch MODE
+Switch the graphics mode. You need to reboot for changes to apply. Supported modes: integrated, nvidia, hybrid.
+
+.TP
+.B \-\-dm DISPLAY_MANAGER
+Manually specify your Display Manager. This is required only for systems without systemd. Supported DMs: gdm, sddm, lightdm.
+
+.TP
+.B \-\-version, \-v
+Print the current version and exit.
+
+.SH EXAMPLES
+.TP
+sudo envycontrol \-\-switch integrated
+Set graphics mode to integrated (disable the Nvidia GPU)
+
+.TP
+sudo envycontrol \-\-switch nvidia
+Set graphics mode to nvidia (automatic display manager detection)
+
+.TP
+sudo envycontrol \-\-switch nvidia \-\-dm sddm
+Manually specify your display manager for nvidia mode (useful for non-systemd users)
+
+.TP
+envycontrol \-\-status
+Show the current graphics mode.
+
+.SH AUTHOR
+Victor Bayas <victorsbayas@gmail.com>
