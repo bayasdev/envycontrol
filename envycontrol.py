@@ -329,6 +329,19 @@ def _setup_display_manager(display_manager):
             f.write(LIGHTDM_CONFIG_CONTENT)
 
 
+def _enable_modeset():
+    # create path if not exists
+    if not os.path.exists(os.path.dirname(NVIDIA_MODESET_PATH)):
+        try:
+            os.makedirs(os.path.dirname(NVIDIA_MODESET_PATH))
+        except Exception as e:
+            print(f'Error: {e}')
+            sys.exit(1)
+    # enable modeset
+    with open(NVIDIA_MODESET_PATH, mode='w', encoding='utf-8') as f:
+        f.write(NVIDIA_MODESET_CONTENT)
+
+
 def _rebuild_initramfs():
     # Debian and its derivatives require rebuilding the initramfs after switching modes
     is_debian = os.path.exists('/etc/debian_version')
@@ -384,8 +397,7 @@ def _switcher(mode, display_manager=''):
                 elif igpu_vendor == 'amd':
                     f.write(XORG_CONTENT_AMD.format(pci_bus))
             # modeset for Nvidia driver is required to prevent tearing on internal screen
-            with open(NVIDIA_MODESET_PATH, mode='w', encoding='utf-8') as f:
-                f.write(NVIDIA_MODESET_CONTENT)
+            _enable_modeset()
         except Exception as e:
             print(f'Error: {e}')
             sys.exit(1)
@@ -396,8 +408,7 @@ def _switcher(mode, display_manager=''):
         # Nvidia and nouveau drivers fallback to hybrid mode by default
         _file_remover(display_manager)
         # modeset for Nvidia driver is required for Wayland on hybrid mode
-        with open(NVIDIA_MODESET_PATH, mode='w', encoding='utf-8') as f:
-            f.write(NVIDIA_MODESET_CONTENT)
+        _enable_modeset()
         _rebuild_initramfs()
 
     else:
