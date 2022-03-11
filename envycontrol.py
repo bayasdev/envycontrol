@@ -159,10 +159,12 @@ display-setup-script=/etc/lightdm/nvidia.sh
 
 # function declaration
 
+
 def _check_root():
     if not os.geteuid() == 0:
         print('Error: this operation requires root privileges')
         sys.exit(1)
+
 
 def _check_status():
     if os.path.exists(BLACKLIST_PATH) and os.path.exists(UDEV_PATH):
@@ -172,6 +174,7 @@ def _check_status():
     else:
         mode = 'hybrid'
     print(f'Current graphics mode is: {mode}')
+
 
 def _reset_sddm():
     # exit if not running as root
@@ -186,6 +189,7 @@ def _reset_sddm():
             sys.exit(1)
     with open(SDDM_XSETUP_PATH, mode='w', encoding='utf-8') as f:
         f.write(ORIGINAL_SDDM_XSETUP)
+
 
 def _file_remover(display_manager):
     # utility function to cleanup environment before setting any mode
@@ -216,7 +220,7 @@ def _file_remover(display_manager):
         if e.errno != 2:
             print(f'Error: {e}')
             sys.exit(1)
-    
+
     # remove display manager specific configs
     if display_manager == 'sddm':
         try:
@@ -242,6 +246,7 @@ def _file_remover(display_manager):
                 print(f'Error: {e}')
                 sys.exit(1)
 
+
 def _get_igpu_vendor():
     # automatically detect whether Intel or AMD iGPU is present
     pattern_intel = re.compile(r'(VGA).*(Intel)')
@@ -255,10 +260,12 @@ def _get_igpu_vendor():
         print('Error: could not find Intel or AMD iGPU')
         sys.exit(1)
 
+
 def _get_pci_bus():
     # dynamically get the PCI bus of the Nvidia dGPU
     # exit if not found
-    pattern = re.compile(r'([0-9]{2}:[0-9a-z]{2}.[0-9]).*(VGA compatible controller: NVIDIA|3D controller: NVIDIA)')
+    pattern = re.compile(
+        r'([0-9]{2}:[0-9a-z]{2}.[0-9]).*(VGA compatible controller: NVIDIA|3D controller: NVIDIA)')
     lspci = subprocess.run(['lspci'], capture_output=True, text=True).stdout
     try:
         # X.org requires PCI:X:X:X format
@@ -267,18 +274,20 @@ def _get_pci_bus():
         print('Error: could not find Nvidia GPU on PCI bus, please switch to hybrid mode first')
         sys.exit(1)
 
+
 def _check_display_manager():
     # automatically detect the current Display Manager
     # this depends on systemd
     pattern = re.compile(r'(\/usr\/bin\/|\/usr\/sbin\/)(.*)')
     try:
-        with open('/etc/systemd/system/display-manager.service',mode='r', encoding='utf-8') as f:
+        with open('/etc/systemd/system/display-manager.service', mode='r', encoding='utf-8') as f:
             display_manager = pattern.findall(f.read())[0][1]
     except Exception:
         display_manager = ''
         print('Warning: automatic Display Manager detection is not available')
     finally:
         return display_manager
+
 
 def _setup_display_manager(display_manager):
     # setup the Xrandr script if necessary
@@ -298,7 +307,8 @@ def _setup_display_manager(display_manager):
         except Exception as e:
             print(f'Error: {e}')
             sys.exit(1)
-        subprocess.run(['chmod','+x',SDDM_XSETUP_PATH], stdout=subprocess.DEVNULL)
+        subprocess.run(['chmod', '+x', SDDM_XSETUP_PATH],
+                       stdout=subprocess.DEVNULL)
     elif display_manager == 'lightdm':
         try:
             with open(LIGHTDM_SCRIPT_PATH, mode='w', encoding='utf-8') as f:
@@ -306,7 +316,8 @@ def _setup_display_manager(display_manager):
         except Exception as e:
             print(f'Error: {e}')
             sys.exit(1)
-        subprocess.run(['chmod','+x',LIGHTDM_SCRIPT_PATH], stdout=subprocess.DEVNULL)
+        subprocess.run(['chmod', '+x', LIGHTDM_SCRIPT_PATH],
+                       stdout=subprocess.DEVNULL)
         # create config
         if not os.path.exists(os.path.dirname(LIGHTDM_CONFIG_PATH)):
             try:
@@ -315,28 +326,31 @@ def _setup_display_manager(display_manager):
                 print(f'Error: {e}')
                 sys.exit(1)
         with open(LIGHTDM_CONFIG_PATH, mode='w', encoding='utf-8') as f:
-                    f.write(LIGHTDM_CONFIG_CONTENT)
+            f.write(LIGHTDM_CONFIG_CONTENT)
+
 
 def _rebuild_initramfs():
     # Debian and its derivatives require rebuilding the initramfs after switching modes
     is_debian = os.path.exists('/etc/debian_version')
     if is_debian:
         print('Rebuilding initramfs...')
-        p = subprocess.run(['update-initramfs', '-u', '-k', 'all'], stdout=subprocess.DEVNULL)
+        p = subprocess.run(['update-initramfs', '-u', '-k',
+                           'all'], stdout=subprocess.DEVNULL)
         if p.returncode == 0:
             print('Successfully rebuilt initramfs!')
         else:
             print('Error: an error ocurred rebuilding the initramfs')
 
+
 def _switcher(mode, display_manager=''):
     # exit if not running as root
     _check_root()
-    
+
     if display_manager not in ['', 'gdm', 'gdm3']:
         print('Error: provided Display Manager is not valid')
         print('Supported Display Managers: gdm, sddm, lightdm')
         sys.exit(1)
-    
+
     # detect Display Manager if not provided
     if display_manager == '':
         display_manager = _check_display_manager()
@@ -354,7 +368,7 @@ def _switcher(mode, display_manager=''):
             print(f'Error: {e}')
             sys.exit(1)
         _rebuild_initramfs()
-    
+
     elif mode == 'nvidia':
         _file_remover(display_manager)
         # detect if Intel or AMD iGPU
@@ -376,7 +390,7 @@ def _switcher(mode, display_manager=''):
             print(f'Error: {e}')
             sys.exit(1)
         _rebuild_initramfs()
-    
+
     elif mode == 'hybrid':
         # remove all files created by other EnvyControl modes
         # Nvidia and nouveau drivers fallback to hybrid mode by default
@@ -385,7 +399,7 @@ def _switcher(mode, display_manager=''):
         with open(NVIDIA_MODESET_PATH, mode='w', encoding='utf-8') as f:
             f.write(NVIDIA_MODESET_CONTENT)
         _rebuild_initramfs()
-        
+
     else:
         print('Error: provided graphics mode is not valid')
         print('Supported modes: integrated, nvidia, hybrid')
@@ -394,27 +408,31 @@ def _switcher(mode, display_manager=''):
     print(f'Graphics mode set to: {mode}')
     print('Please reboot your computer for changes to apply')
 
+
 def _print_version():
-        print(f'EnvyControl {VERSION}')
+    print(f'EnvyControl {VERSION}')
+
 
 def main():
     # argument parser
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--status', action='store_true', help='Query the current graphics mode set by EnvyControl')
+    parser.add_argument('--status', action='store_true',
+                        help='Query the current graphics mode set by EnvyControl')
     parser.add_argument('--switch', type=str, metavar='MODE', action='store',
                         help='Switch the graphics mode. You need to reboot for changes to apply. Supported modes: integrated, nvidia, hybrid')
     parser.add_argument('--dm', type=str, metavar='DISPLAY_MANAGER', action='store',
                         help='Manually specify your Display Manager. This is required only for systems without systemd. Supported DMs: gdm, sddm, lightdm')
     parser.add_argument('--reset_sddm', action='store_true',
                         help='Reset SDDM Xsetup file. This is required only when upgrading from EnvyControl versions lower than 1.4')
-    parser.add_argument('--version', '-v', action='store_true', help='Print the current version and exit')
+    parser.add_argument('--version', '-v', action='store_true',
+                        help='Print the current version and exit')
 
     # print help if no arg is provided
-    if len(sys.argv)==1:
+    if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
-    
+
     args = parser.parse_args()
 
     if args.status:
@@ -432,6 +450,7 @@ def main():
         print('Error: this option is intended to be used with --switch nvidia')
         print('Example: sudo envycontrol --switch nvidia --dm sddm')
         sys.exit(1)
+
 
 if __name__ == '__main__':
     main()
