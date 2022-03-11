@@ -306,10 +306,7 @@ def _setup_display_manager(display_manager):
                 print(f'Error: {e}')
                 sys.exit(1)
         with open(LIGHTDM_CONFIG_PATH, mode='w', encoding='utf-8') as f:
-                if igpu_vendor == "amd":
-                    f.write(xrandr_script_amd)
-                else:
-                    f.write(XRANDR_SCRIPT_INTEL)
+                    f.write(LIGHTDM_CONFIG_CONTENT)
     elif display_manager not in ['', 'gdm', 'gdm3']:
         print('Error: provided Display Manager is not valid')
         print('Supported Display Managers: gdm, sddm, lightdm')
