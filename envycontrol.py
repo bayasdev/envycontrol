@@ -176,17 +176,21 @@ def _check_status():
     print(f'Current graphics mode is: {mode}')
 
 
+def _create_path(path):
+    if not os.path.exists(os.path.dirname(path)):
+        try:
+            os.makedirs(os.path.dirname(path))
+        except Exception as e:
+            print(f'Error: {e}')
+            sys.exit(1)
+
+
 def _reset_sddm():
     # exit if not running as root
     _check_root()
 
     # create default Xsetup
-    if not os.path.exists(os.path.dirname(SDDM_XSETUP_PATH)):
-        try:
-            os.makedirs(os.path.dirname(SDDM_XSETUP_PATH))
-        except Exception as e:
-            print(f'Error: {e}')
-            sys.exit(1)
+    _create_path(SDDM_XSETUP_PATH)
     with open(SDDM_XSETUP_PATH, mode='w', encoding='utf-8') as f:
         f.write(ORIGINAL_SDDM_XSETUP)
 
@@ -222,16 +226,23 @@ def _file_remover(display_manager):
             sys.exit(1)
 
     # remove display manager specific configs
+
     if display_manager == 'sddm':
         try:
-            with open(f'{SDDM_XSETUP_PATH}.bak', "r", encoding='utf-8') as f:
-                data = f.readlines()
-                with open(SDDM_XSETUP_PATH, "w", encoding='utf-8') as f:
-                    f.write(data)
-        except OSError as e:
-            if e.errno != 2:
-                print(f'Error: {e}')
-                sys.exit(1)
+            # restore backup if exists
+            if os.path.exists(f'{SDDM_XSETUP_PATH}.bak'):
+                with open(f'{SDDM_XSETUP_PATH}.bak', "r", encoding='utf-8') as f:
+                    data = f.readlines()
+                    with open(SDDM_XSETUP_PATH, "w", encoding='utf-8') as f:
+                        f.write(data)
+            # create default Xsetup if not exists
+            elif not os.path.exists(SDDM_XSETUP_PATH):
+                _reset_sddm()
+            # else do nothing
+        except Exception as e:
+            print(f'Error: {e}')
+            sys.exit(1)
+
     if display_manager == 'lightdm':
         try:
             os.remove(LIGHTDM_SCRIPT_PATH)
@@ -293,9 +304,6 @@ def _setup_display_manager(display_manager):
     # setup the Xrandr script if necessary
     if display_manager == 'sddm':
         try:
-            # create default Xsetup if not exists
-            if not os.path.exists(SDDM_XSETUP_PATH):
-                _reset_sddm()
             # backup current Xsetup
             with open(SDDM_XSETUP_PATH, mode='r', encoding='utf-8') as f:
                 content = f.read()
@@ -319,25 +327,13 @@ def _setup_display_manager(display_manager):
         subprocess.run(['chmod', '+x', LIGHTDM_SCRIPT_PATH],
                        stdout=subprocess.DEVNULL)
         # create config
-        if not os.path.exists(os.path.dirname(LIGHTDM_CONFIG_PATH)):
-            try:
-                os.makedirs(os.path.dirname(LIGHTDM_CONFIG_PATH))
-            except Exception as e:
-                print(f'Error: {e}')
-                sys.exit(1)
+        _create_path(LIGHTDM_CONFIG_PATH)
         with open(LIGHTDM_CONFIG_PATH, mode='w', encoding='utf-8') as f:
             f.write(LIGHTDM_CONFIG_CONTENT)
 
 
 def _enable_modeset():
-    # create path if not exists
-    if not os.path.exists(os.path.dirname(NVIDIA_MODESET_PATH)):
-        try:
-            os.makedirs(os.path.dirname(NVIDIA_MODESET_PATH))
-        except Exception as e:
-            print(f'Error: {e}')
-            sys.exit(1)
-    # enable modeset
+    _create_path(NVIDIA_MODESET_PATH)
     with open(NVIDIA_MODESET_PATH, mode='w', encoding='utf-8') as f:
         f.write(NVIDIA_MODESET_CONTENT)
 
@@ -372,9 +368,11 @@ def _switcher(mode, display_manager=''):
         _file_remover(display_manager)
         try:
             # blacklist all nouveau and Nvidia modules
+            _create_path(BLACKLIST_PATH)
             with open(BLACKLIST_PATH, mode='w', encoding='utf-8') as f:
                 f.write(BLACKLIST_CONTENT)
             # power off the Nvidia GPU with Udev rules
+            _create_path(UDEV_PATH)
             with open(UDEV_PATH, mode='w', encoding='utf-8') as f:
                 f.write(UDEV_CONTENT)
         except Exception as e:
