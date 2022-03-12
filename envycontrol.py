@@ -136,7 +136,6 @@ SDDM_XSETUP_PATH = '/usr/share/sddm/scripts/Xsetup'
 ORIGINAL_SDDM_XSETUP = '''#!/bin/sh
 # Xsetup - run as root before the login dialog appears
 
-
 '''
 
 # LightDM config
@@ -263,7 +262,7 @@ def _cleanup(display_manager):
             # restore backup if exists
             if os.path.exists(f'{SDDM_XSETUP_PATH}.bak'):
                 with open(f'{SDDM_XSETUP_PATH}.bak', "r", encoding='utf-8') as f:
-                    data = f.readlines()
+                    data = f.read()
                     with open(SDDM_XSETUP_PATH, "w", encoding='utf-8') as f:
                         f.write(data)
             # create default Xsetup if not exists
@@ -302,7 +301,7 @@ def _setup_display_manager(display_manager):
                     f.write(content)
             # append to Xsetup
             with open(SDDM_XSETUP_PATH, mode='a', encoding='utf-8') as f:
-                f.write(f'\n{XRANDR_SCRIPT}')
+                f.write(XRANDR_SCRIPT)
         except Exception as e:
             print(f'Error: {e}')
             sys.exit(1)
