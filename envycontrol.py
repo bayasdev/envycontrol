@@ -226,7 +226,7 @@ def _switcher(mode):
 
 def _cleanup():
     # Remove all files created by EnvyControl
-    to_remove = (BLACKLIST_PATH,UDEV_INTEGRATED_PATH, XORG_PATH, EXTRA_PATH, '/etc/X11/xorg.conf.d/90-nvidia.conf', MODESET_PATH, '/etc/lightdm/nvidia.sh', '/etc/lightdm/lightdm.conf.d/20-nvidia.conf')
+    to_remove = (BLACKLIST_PATH,UDEV_INTEGRATED_PATH, UDEV_PM_PATH, XORG_PATH, EXTRA_PATH, '/etc/X11/xorg.conf.d/90-nvidia.conf', MODESET_PATH, '/etc/lightdm/nvidia.sh', '/etc/lightdm/lightdm.conf.d/20-nvidia.conf')
     for file in to_remove:
         try:
             os.remove(file)
