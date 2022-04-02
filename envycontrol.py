@@ -305,13 +305,13 @@ def _print_version():
 def main():
     # argument parsing
     parser = argparse.ArgumentParser()
-    parser.add_argument('--status', action='store_true',
+    parser.add_argument('-q', '--query', action='store_true',
                         help='Query the current graphics mode set by EnvyControl')
-    parser.add_argument('--switch', type=str, metavar='MODE', action='store',
+    parser.add_argument('-s', '--switch', type=str, metavar='MODE', action='store',
                         help='Switch the graphics mode. You need to reboot for changes to apply. Supported modes: integrated, nvidia, hybrid')
     parser.add_argument('--reset_sddm', action='store_true',
                         help='Reset SDDM Xsetup file. This is required only when upgrading from EnvyControl versions lower than 1.4')
-    parser.add_argument('--version', '-v', action='store_true',
+    parser.add_argument('-v', '--version', action='store_true',
                         help='Print the current version and exit')
     # print help if no arg is provided
     if len(sys.argv) == 1:
