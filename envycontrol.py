@@ -280,7 +280,7 @@ def _create_file(path, content):
     with open(path, mode='w', encoding='utf-8') as f:
         f.write(content)
 
-def _get_status():
+def _query_mode():
     if os.path.exists(BLACKLIST_PATH) and os.path.exists(UDEV_INTEGRATED_PATH):
         mode = 'integrated'
     elif os.path.exists(XORG_PATH) and os.path.exists(MODESET_PATH):
@@ -314,8 +314,8 @@ def main():
         parser.print_help()
         sys.exit(1)
     args = parser.parse_args()
-    if args.status:
-        _get_status()
+    if args.query:
+        _query_mode()
     elif args.version:
         _print_version()
     elif args.reset_sddm:
