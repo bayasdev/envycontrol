@@ -98,7 +98,7 @@ The following options can now be enabled when switching graphics mode:
 ### nvidia
 
 - ForceCompositionPipeline (fixes tearing on external screens wired to the Nvidia GPU)
-- Coolbits (allows overclocking on supported models)
+- Coolbits (allows overclocking on supported GPUs)
 
 ## Frequently Asked Questions
 
