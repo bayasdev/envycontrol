@@ -8,35 +8,21 @@ Envycontrol is licensed under the MIT license which is a permissive, free softwa
 
 ### Compatible distros
 
-**This program was originally developed for Arch Linux** but it should work on any other Linux distribution.
-
-For a detailed list of tested distros [see here](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#tested-distros).
+EnvyControl should work on any distribution of Linux, see [tested distros](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#tested-distros).
 
 **If you're using Ubuntu please [read this](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#a-note-for-ubuntu-users).**
 
-### Supported display managers 
+### A note for SDDM users
 
-- GDM
-- SDDM
-- LightDM
-
-If your display manager isn't currently supported by EnvyControl, you might have to [manually configure it](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#what-to-do-if-my-display-manager-is-not-supported).
-
-### A note for GDM users
-
-See <a href="https://github.com/DaVikingMan/EnvyControl/wiki/Fixes-for-some-common-problems">Fixes for some common problems</a>
+If `/usr/share/sddm/scripts/Xsetup` file is missing on your system please run `sudo envycontrol --reset_sddm`.
 
 ### Supported graphics modes
 
 - integrated
-- nvidia
 - hybrid
+- nvidia (X.org only)
 
 Read a detailed explanation [here](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#graphics-modes-explained).
-
-### A note on AMD + Nvidia systems
-
-I don't own any device with this hardware combination, however experimental support for AMD systems under `nvidia` mode has been added. **Please send me your feedback.**
 
 ## Get EnvyControl
 
@@ -55,60 +41,70 @@ yay -S envycontrol
 pamac install envycontrol
 ```
 
-Now you can run `sudo envycontrol --switch <MODE>` to switch graphics modes.
+Now you can run `sudo envycontrol -s <MODE>` to switch graphics modes.
 
 ### Other distros
 
 - Clone this repository with `git clone https://github.com/geminis3/envycontrol.git` or download the latest tarball from the releases page.
-- Run `sudo python envycontrol.py --switch <MODE>` from the root of the repository to switch to a different graphics mode. 
+- Run `sudo python envycontrol.py -s <MODE>` from the root of the repository to switch to a different graphics mode. 
  
 You can also install EnvyControl globally as a pip package:
 
 - From the root of the cloned repository run `sudo pip install .`
-- Now you can run `sudo envycontrol --switch <MODE>` from any directory to switch graphics modes.
+- Now you can run `sudo envycontrol -s <MODE>` from any directory to switch graphics modes.
 
 ## Usage
 
 ```
-usage: envycontrol.py [-h] [--status] [--switch MODE] [--dm DISPLAY_MANAGER] [--version]
+usage: envycontrol.py [-h] [-v] [-s MODE] [-q] [--reset_sddm]
 
 options:
   -h, --help            show this help message and exit
-  --status              Query the current graphics mode set by EnvyControl
-  --switch MODE         Switch the graphics mode. You need to reboot for changes to apply. Supported modes: integrated, nvidia, hybrid
-  --dm DISPLAY_MANAGER  Manually specify your Display Manager. This is required only for systems without systemd. Supported DMs: gdm, sddm, lightdm
-  --version, -v         Print the current version and exit
+  -v, --version         show this program's version number and exit
+  -s MODE, --switch MODE
+                        switch the graphics mode, supported modes: integrated, hybrid, nvidia
+  -q, --query           query the current graphics mode set by EnvyControl
+  --reset_sddm          restore original SDDM Xsetup file
 ```
 
 ### Examples
 
-Set graphics mode to `integrated` (disable the Nvidia GPU):
+Set current graphics mode to `integrated` (power off the Nvidia dGPU):
 
 ```
-sudo envycontrol --switch integrated
+sudo envycontrol -s integrated
 ```
 
-Set graphics mode to `nvidia` (automatic display manager detection):
+Set current graphics mode to `nvidia`
 
 ```
-sudo envycontrol --switch nvidia
+sudo envycontrol -s nvidia
 ```
 
-Manually specify your display manager for `nvidia` mode (useful for non-systemd users):
+Query the current graphics mode:
 
 ```
-sudo envycontrol --switch nvidia --dm sddm
+envycontrol --query
 ```
 
-Show the current graphics mode:
+## New in 2.0
 
-```
-envycontrol --status
-```
+The following options can now be enabled when switching graphics mode:
+
+### hybrid
+
+- RTD3 power management (for Turing and newer GPUs)
+
+### nvidia
+
+- ForceCompositionPipeline (fixes tearing on external screens wired to the Nvidia GPU)
+- Coolbits (allows overclocking on supported GPUs)
 
 ## Frequently Asked Questions
 
 [See here](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions).
+
+Also read [fixes for some common problems](https://github.com/DaVikingMan/EnvyControl/wiki/Fixes-for-some-common-problems)
 
 ## What to do if you have found a bug
 
