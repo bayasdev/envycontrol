@@ -260,9 +260,17 @@ def _get_pci_bus():
 
 def _rebuild_initramfs():
     is_debian = os.path.exists('/etc/debian_version')
+    is_rhel = os.path.exists('/etc/redhat-release')
     if is_debian:
         print('Rebuilding initramfs...')
         p = subprocess.run(['update-initramfs', '-u', '-k', 'all'], stdout=subprocess.DEVNULL)
+        if p.returncode == 0:
+            print('Successfully rebuilt initramfs!')
+        else:
+            print('Error: an error ocurred rebuilding the initramfs')
+    if is_rhel:
+        print('Rebuilding initramfs...')
+        p = subprocess.run(['dracut', '--force' '--regenerate-all'], stdout=subprocess.DEVNULL)
         if p.returncode == 0:
             print('Successfully rebuilt initramfs!')
         else:
