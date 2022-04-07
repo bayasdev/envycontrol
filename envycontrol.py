@@ -248,7 +248,7 @@ def _switcher(mode, display_manager = ''):
 
 def _cleanup():
     # Remove all files created by EnvyControl
-    to_remove = (BLACKLIST_PATH,UDEV_INTEGRATED_PATH, UDEV_PM_PATH, XORG_PATH, EXTRA_PATH, '/etc/X11/xorg.conf.d/90-nvidia.conf', MODESET_PATH, LIGHTDM_SCRIPT_PATH, LIGHTDM_CONFIG_PATH, SDDM_XSETUP_PATH)
+    to_remove = (BLACKLIST_PATH,UDEV_INTEGRATED_PATH, UDEV_PM_PATH, XORG_PATH, EXTRA_PATH, '/etc/X11/xorg.conf.d/90-nvidia.conf', MODESET_PATH, LIGHTDM_SCRIPT_PATH, LIGHTDM_CONFIG_PATH)
     for file in to_remove:
         try:
             os.remove(file)
@@ -256,6 +256,10 @@ def _cleanup():
             if e.errno != 2:
                 print(f'Error: {e}')
                 sys.exit(1)
+    # restore Xsetup backup if found
+    if os.path.exists(SDDM_XSETUP_PATH+'.bak'):
+            with open(SDDM_XSETUP_PATH+'.bak', mode='r', encoding='utf-8') as f:
+                _create_file(SDDM_XSETUP_PATH, f.read())
 
 def _get_igpu_vendor():
     pattern_intel = re.compile(r'(VGA).*(Intel)')
@@ -307,8 +311,11 @@ def _setup_display_manager(display_manager):
     # setup the Xrandr script if necessary
     # get igpu vendor to use if needed
     igpu_vendor = _get_igpu_vendor()
-    
     if display_manager == 'sddm':
+        # backup Xsetup
+        if os.path.exists(SDDM_XSETUP_PATH):
+            with open(SDDM_XSETUP_PATH, mode='r', encoding='utf-8') as f:
+                _create_file(SDDM_XSETUP_PATH+'.bak', f.read())
         if igpu_vendor == "intel":
             _create_file(SDDM_XSETUP_PATH, NVIDIA_XRANDR_SCRIPT.format("modesetting"))
         else:
