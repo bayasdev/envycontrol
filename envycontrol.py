@@ -117,7 +117,7 @@ EndSection
 
 Section "Device"
     Identifier "amdgpu"
-    Driver "modesetting"
+    Driver "amdgpu"
 EndSection
 
 Section "Screen"
