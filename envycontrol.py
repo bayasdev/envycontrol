@@ -403,7 +403,14 @@ def main():
     elif args.reset_sddm:
         _reset_sddm()
     elif args.switch:
-        _switcher(args.switch)
+        if args.dm and args.switch == 'nvidia':
+            _switcher(args.switch, args.dm)
+        else:
+            _switcher(args.switch)
+    elif args.dm and not args.switch:
+        print('Error: this option is intended to be used with --switch nvidia')
+        print('Example: sudo envycontrol --switch nvidia --dm sddm')
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()
