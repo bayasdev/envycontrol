@@ -12,6 +12,14 @@ EnvyControl should work on any distribution of Linux, see [tested distros](https
 
 **If you're using Ubuntu please [read this](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#a-note-for-ubuntu-users).**
 
+### Supported display managers 
+
+- GDM
+- SDDM
+- LightDM
+
+If your display manager isn't currently supported by EnvyControl you might have to [manually configure it](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#what-to-do-if-my-display-manager-is-not-supported).
+
 ### A note for SDDM users
 
 If `/usr/share/sddm/scripts/Xsetup` file is missing on your system please run `sudo envycontrol --reset_sddm`.
@@ -56,7 +64,7 @@ You can also install EnvyControl globally as a pip package:
 ## Usage
 
 ```
-usage: envycontrol.py [-h] [-v] [-s MODE] [-q] [--reset_sddm]
+usage: envycontrol.py [-h] [-v] [-s MODE] [-q] [--dm DISPLAY_MANAGER] [--reset_sddm]
 
 options:
   -h, --help            show this help message and exit
@@ -64,6 +72,7 @@ options:
   -s MODE, --switch MODE
                         switch the graphics mode, supported modes: integrated, hybrid, nvidia
   -q, --query           query the current graphics mode set by EnvyControl
+  --dm DISPLAY_MANAGER  Manually specify your Display Manager. This is required only for systems without systemd. Supported DMs: gdm, sddm, lightdm
   --reset_sddm          restore original SDDM Xsetup file
 ```
 
@@ -75,10 +84,16 @@ Set current graphics mode to `integrated` (power off the Nvidia dGPU):
 sudo envycontrol -s integrated
 ```
 
-Set current graphics mode to `nvidia`
+Set current graphics mode to `nvidia` (automatic display manager setup)
 
 ```
 sudo envycontrol -s nvidia
+```
+
+Set current graphics mode to `nvidia` and setup `SDDM` display manager
+
+```
+sudo envycontrol -s nvidia --dm sddm
 ```
 
 Query the current graphics mode:
