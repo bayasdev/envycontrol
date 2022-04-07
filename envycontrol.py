@@ -270,7 +270,7 @@ def _rebuild_initramfs():
             print('Error: an error ocurred rebuilding the initramfs')
     if is_rhel:
         print('Rebuilding initramfs...')
-        p = subprocess.run(['dracut', '--force' '--regenerate-all'], stdout=subprocess.DEVNULL)
+        p = subprocess.run(['dracut', '--force', '--regenerate-all'], stdout=subprocess.DEVNULL)
         if p.returncode == 0:
             print('Successfully rebuilt initramfs!')
         else:
