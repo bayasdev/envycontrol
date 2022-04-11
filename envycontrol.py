@@ -325,9 +325,9 @@ def _setup_display_manager(display_manager):
     elif display_manager == 'lightdm':
         if igpu_vendor == "amd":
             amd_name = _get_amd_igpu_name()
-            _create_file(SDDM_XSETUP_PATH, NVIDIA_XRANDR_SCRIPT.format(amd_name))
+            _create_file(LIGHTDM_SCRIPT_PATH, NVIDIA_XRANDR_SCRIPT.format(amd_name))
         else:
-            _create_file(SDDM_XSETUP_PATH, NVIDIA_XRANDR_SCRIPT.format("modesetting"))
+            _create_file(LIGHTDM_SCRIPT_PATH, NVIDIA_XRANDR_SCRIPT.format("modesetting"))
         subprocess.run(['chmod','+x',LIGHTDM_SCRIPT_PATH], stdout=subprocess.DEVNULL)
         # create config
         if not os.path.exists(os.path.dirname(LIGHTDM_CONFIG_PATH)):
