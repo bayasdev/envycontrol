@@ -285,11 +285,11 @@ def _get_amd_igpu_name():
 
 def _get_pci_bus():
     pattern = re.compile(
-        r'([0-9]{2}:[0-9a-z]{2}.[0-9]).*(VGA compatible controller: NVIDIA|3D controller: NVIDIA)')
+        r'([0-9a-f]{2}:[0-9a-z]{2}.[0-9]).*(VGA compatible controller: NVIDIA|3D controller: NVIDIA)')
     lspci = subprocess.run(['lspci'], stdout=subprocess.PIPE).stdout.decode('utf-8')
     try:
         # Need to return Bus ID in PCI:X:X:X format
-        return ':'.join([str(int(element)) for element in pattern.findall(lspci)[0][0].replace('.', ':').split(':')])
+        return ':'.join([str(int(element, 16)) for element in pattern.findall(lspci)[0][0].replace('.', ':').split(':')])
     except Exception:
         print(f'Error: switching directly from integrated to Nvidia mode is not supported\nTry switching to hybrid mode first!')
         sys.exit(1)
