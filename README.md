@@ -102,6 +102,14 @@ Query the current graphics mode:
 envycontrol --query
 ```
 
+### Gnome Extension
+
+The [GPU profile selector](https://github.com/LorenzoMorelli/GPU_profile_selector) extension provides a simple way to switch between graphics modes in a few clicks, you can get it from [here](https://extensions.gnome.org/extension/5009/gpu-profile-selector/).
+
+PD: Just make sure to have EnvyControl installed globally ;)
+
+![gpu profile selector screenshot](https://github.com/LorenzoMorelli/GPU_profile_selector/raw/main/extension_screenshot.png)
+
 ## New in 2.0
 
 The following options can now be enabled when switching graphics mode:
