@@ -332,8 +332,7 @@ def _setup_display_manager(display_manager):
             _create_file(LIGHTDM_SCRIPT_PATH, NVIDIA_XRANDR_SCRIPT.format("modesetting"))
         subprocess.run(['chmod','+x',LIGHTDM_SCRIPT_PATH], stdout=subprocess.DEVNULL)
         # create config
-        if not os.path.exists(os.path.dirname(LIGHTDM_CONFIG_PATH)):
-            _create_file(LIGHTDM_CONFIG_PATH, LIGHTDM_CONFIG_CONTENT)
+        _create_file(LIGHTDM_CONFIG_PATH, LIGHTDM_CONFIG_CONTENT)
     elif display_manager not in ['', 'gdm', 'gdm3']:
         print('Error: provided Display Manager is not valid')
         print('Supported Display Managers: gdm, sddm, lightdm')
