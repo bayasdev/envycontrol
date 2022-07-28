@@ -344,6 +344,8 @@ def _rebuild_initramfs():
     # RHEL and SUSE derivatives
     elif os.path.exists('/etc/redhat-release') or os.path.exists('/usr/bin/zypper'):
         command = ['dracut', '--force', '--regenerate-all']
+    elif os.path.exists('/etc/arch-release') or os.path.exists('/usr/bin/pacman'):
+        command = ['mkinitcpio', '-P']
     else:
         command = []
     if len(command) != 0:
