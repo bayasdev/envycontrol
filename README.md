@@ -17,6 +17,7 @@ EnvyControl should work on any distribution of Linux, see [tested distros](https
 - GDM
 - SDDM
 - LightDM
+- XDM
 
 If your display manager isn't currently supported by EnvyControl you might have to [manually configure it](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#what-to-do-if-my-display-manager-is-not-supported).
 
@@ -72,7 +73,7 @@ options:
   -s MODE, --switch MODE
                         switch the graphics mode, supported modes: integrated, hybrid, nvidia
   -q, --query           query the current graphics mode set by EnvyControl
-  --dm DISPLAY_MANAGER  Manually specify your Display Manager. This is required only for systems without systemd. Supported DMs: gdm, sddm, lightdm
+  --dm DISPLAY_MANAGER  Manually specify your Display Manager. This is required only for systems without systemd. Supported DMs: gdm, sddm, lightdm, xdm
   --reset_sddm          restore original SDDM Xsetup file
 ```
 
