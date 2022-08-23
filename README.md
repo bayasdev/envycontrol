@@ -123,6 +123,7 @@ The following options can now be enabled when switching graphics mode:
 
 - ForceCompositionPipeline (fixes tearing on external screens wired to the Nvidia GPU)
 - Coolbits (allows overclocking on supported GPUs)
+- Add nvidia modules to initramfs (from version 2.1.2)
 
 ## Frequently Asked Questions
 
