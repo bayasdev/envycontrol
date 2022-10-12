@@ -75,6 +75,9 @@ options:
   --dm DISPLAY_MANAGER  Manually specify your Display Manager. This is required only for systems without systemd. Supported DMs: gdm, sddm, lightdm
   --reset_sddm          restore original SDDM Xsetup file
 ```
+### Warning
+
+The usage of this tool may overwrite/remove custom X.org configs, please review the source code before proceeding.
 
 ### Examples
 
