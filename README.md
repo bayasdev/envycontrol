@@ -1,4 +1,4 @@
-**This project is no longer actively mantained. Consider forking it if necessary.**
+**This project is no longer actively maintained. Consider forking it if necessary.**
 
 ***
 
