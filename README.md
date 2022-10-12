@@ -111,7 +111,7 @@ The [GPU profile selector](https://github.com/LorenzoMorelli/GPU_profile_selecto
 
 PD: Just make sure to have EnvyControl installed globally ;)
 
-![gpu profile selector screenshot](https://github.com/LorenzoMorelli/GPU_profile_selector/raw/main/extension_screenshot.png)
+![gpu profile selector screenshot](https://github.com/LorenzoMorelli/GPU_profile_selector/raw/main/img/extension_screenshot.png)
 
 ## New in 2.0
 
