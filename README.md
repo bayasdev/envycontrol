@@ -1,14 +1,13 @@
-**This project is no longer actively maintained. Consider forking it if necessary.**
-
-***
-
 # EnvyControl
+
+![EnvyControl logo](./logos/dark.png#gh-dark-mode-only)
+![EnvyControl logo](./logos/light.png#gh-light-mode-only)
 
 EnvyControl is a program aimed to provide an easy way to switch GPU modes on Nvidia Optimus systems (i.e laptops with Intel + Nvidia or AMD + Nvidia configurations) under Linux.
 
 ### License
 
-Envycontrol is licensed under the MIT license which is a permissive, free software license (see <a href="https://github.com/geminis3/envycontrol/blob/main/LICENSE">LICENSE</a>).
+Envycontrol is licensed under the MIT license which is a permissive, free software license (see [LICENSE](https://github.com/geminis3/envycontrol/blob/main/LICENSE)).
 
 ### Compatible distros
 
@@ -24,10 +23,6 @@ EnvyControl should work on any distribution of Linux, see [tested distros](https
 
 If your display manager isn't currently supported by EnvyControl you might have to [manually configure it](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#what-to-do-if-my-display-manager-is-not-supported).
 
-### A note for SDDM users
-
-If `/usr/share/sddm/scripts/Xsetup` file is missing on your system please run `sudo envycontrol --reset_sddm`.
-
 ### Supported graphics modes
 
 - integrated
@@ -35,6 +30,27 @@ If `/usr/share/sddm/scripts/Xsetup` file is missing on your system please run `s
 - nvidia (X.org only)
 
 Read a detailed explanation [here](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#graphics-modes-explained).
+
+### A note for GNOME 43+ Wayland users
+
+Latest changes in GDM now require `NVreg_PreserveVideoMemoryAllocations` kernel parameter to be set to 1 as well as `nvidia-suspend` services to be enabled for Wayland sessions to appear.
+
+#### Quick fix:
+
+```
+# 1. Re-run Envycontrol 2.2+ (either nvidia or hybrid mode)
+sudo envycontrol -s nvidia
+
+# 2. Now enable the required Nvidia services
+sudo systemctl enable nvidia-{suspend,resume,hibernate}
+
+# 3. Reboot
+```
+
+
+### A note for SDDM users
+
+If `/usr/share/sddm/scripts/Xsetup` file is missing on your system please run `sudo envycontrol --reset_sddm`.
 
 ## Get EnvyControl
 
