@@ -1,7 +1,10 @@
-# EnvyControl
-
-![EnvyControl logo](./logos/dark.png#gh-dark-mode-only)
-![EnvyControl logo](./logos/light.png#gh-light-mode-only)
+<div align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./logos/dark.png">
+  <img alt="EnvyControl Logo" src="./logos/light.png" height="100px">
+</picture>
+</div>
+<br>
 
 EnvyControl is a program aimed to provide an easy way to switch GPU modes on Nvidia Optimus systems (i.e laptops with Intel + Nvidia or AMD + Nvidia configurations) under Linux.
 
