@@ -6,42 +6,42 @@
 </div>
 <br>
 
-EnvyControl is a program aimed to provide an easy way to switch GPU modes on Nvidia Optimus systems (i.e laptops with Intel + Nvidia or AMD + Nvidia configurations) under Linux.
+# 👁‍🗨 EnvyControl
 
-### License
+EnvyControl is a program aimed to provide an easy way to switch GPU modes on Nvidia Optimus systems (i.e laptops with hybrid Intel + Nvidia or AMD + Nvidia graphics configurations) under Linux.
 
-Envycontrol is licensed under the MIT license which is a permissive, free software license (see [LICENSE](https://github.com/geminis3/envycontrol/blob/main/LICENSE)).
+### 📖 License
 
-### Compatible distros
+EnvyControl is free and open-source software released under the [MIT](https://github.com/bayasdev/envycontrol/blob/main/LICENSE) license.
 
-EnvyControl should work on any distribution of Linux, see [tested distros](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#tested-distros).
+### ⚠️ Disclaimer
 
-**If you're using Ubuntu please [read this](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#a-note-for-ubuntu-users).**
+**This software is provided 'as-is' without any express or implied warranty.** 
 
-### Supported display managers 
+Keep it mind any custom X.org configuration may get deleted or overwritten when switching modes, please review this README and the source code before proceeding.
+
+## 🐧 Compatible distros
+
+EnvyControl should work on any distribution of Linux, see [tested distros](https://github.com/bayasdev/envycontrol/wiki/Frequently-Asked-Questions#tested-distros).
+
+**If you're using Ubuntu or its derivatives please follow [these instructions](https://github.com/bayasdev/envycontrol/wiki/Frequently-Asked-Questions#instructions-for-ubuntu-and-its-derivatives).**
+
+### 🖥️ Supported display managers 
 
 - GDM
 - SDDM
 - LightDM
 
-If your display manager isn't currently supported by EnvyControl you might have to [manually configure it](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#what-to-do-if-my-display-manager-is-not-supported).
+If your display manager isn't currently supported by EnvyControl you might have to [manually configure it](https://github.com/bayasdev/envycontrol/wiki/Frequently-Asked-Questions#what-to-do-if-my-display-manager-is-not-supported).
 
-### Supported graphics modes
+## 💡 Tips
 
-- integrated
-- hybrid
-- nvidia (X.org only)
-
-Read a detailed explanation [here](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions#graphics-modes-explained).
-
-### A note for GNOME 43+ Wayland users
+### Wayland session is missing on Gnome 43+
 
 Latest changes in GDM now require `NVreg_PreserveVideoMemoryAllocations` kernel parameter to be set to 1 as well as `nvidia-suspend` services to be enabled for Wayland sessions to appear.
 
-#### Quick fix:
-
 ```
-# 1. Re-run Envycontrol 2.2+ (either nvidia or hybrid mode)
+# 1. Re-run EnvyControl 2.2+ (either nvidia or hybrid mode)
 sudo envycontrol -s nvidia
 
 # 2. Now enable the required Nvidia services
@@ -50,41 +50,27 @@ sudo systemctl enable nvidia-{suspend,resume,hibernate}
 # 3. Reboot
 ```
 
+### `/usr/share/sddm/scripts/Xsetup` is missing on my system
 
-### A note for SDDM users
+Please run `sudo envycontrol --reset_sddm`.
 
-If `/usr/share/sddm/scripts/Xsetup` file is missing on your system please run `sudo envycontrol --reset_sddm`.
+## ⬇️ Getting EnvyControl
 
-## Get EnvyControl
+### Arch Linux ([AUR](https://aur.archlinux.org/packages/envycontrol))
+1. `yay -S envycontrol`.
+2. Run `sudo envycontrol -s <MODE>` to switch graphics modes.
 
-### Arch Linux and its derivatives
+### From source
 
-Install the [envycontrol](https://aur.archlinux.org/packages/envycontrol/) package from the AUR manually or by using an AUR helper:
-
-```
-# with Paru
-paru -S envycontrol
-
-# with Yay
-yay -S envycontrol
-
-# with Pamac (Manjaro)
-pamac install envycontrol
-```
-
-Now you can run `sudo envycontrol -s <MODE>` to switch graphics modes.
-
-### Other distros
-
-- Clone this repository with `git clone https://github.com/geminis3/envycontrol.git` or download the latest tarball from the releases page.
-- Run `sudo python envycontrol.py -s <MODE>` from the root of the repository to switch to a different graphics mode. 
+1. Clone this repository with `git clone https://github.com/bayasdev/envycontrol.git` or download the latest tarball from the releases page.
+2. Run `sudo python envycontrol.py -s <MODE>` from the root of the repository to switch to a different graphics mode. 
  
-You can also install EnvyControl globally as a pip package:
+### Install globally as a pip package
 
 - From the root of the cloned repository run `sudo pip install .`
 - Now you can run `sudo envycontrol -s <MODE>` from any directory to switch graphics modes.
 
-## Usage
+## ⚡️ Usage
 
 ```
 usage: envycontrol.py [-h] [-v] [-s MODE] [-q] [--dm DISPLAY_MANAGER] [--reset_sddm]
@@ -98,11 +84,10 @@ options:
   --dm DISPLAY_MANAGER  Manually specify your Display Manager. This is required only for systems without systemd. Supported DMs: gdm, sddm, lightdm
   --reset_sddm          restore original SDDM Xsetup file
 ```
-### Warning
 
-The usage of this tool may overwrite/remove custom X.org configs, please review the source code before proceeding.
+**Read a detailed explanation about EnvyControl graphics modes [here](https://github.com/bayasdev/envycontrol/wiki/Frequently-Asked-Questions#graphics-modes-explained).**
 
-### Examples
+### Usage examples
 
 Set current graphics mode to `integrated` (power off the Nvidia dGPU):
 
@@ -128,36 +113,30 @@ Query the current graphics mode:
 envycontrol --query
 ```
 
-### Gnome Extension
+## 📦 Gnome Extension
 
 The [GPU profile selector](https://github.com/LorenzoMorelli/GPU_profile_selector) extension provides a simple way to switch between graphics modes in a few clicks, you can get it from [here](https://extensions.gnome.org/extension/5009/gpu-profile-selector/).
 
-PD: Just make sure to have EnvyControl installed globally ;)
+**Make sure to have EnvyControl installed globally!**
 
 ![gpu profile selector screenshot](https://github.com/LorenzoMorelli/GPU_profile_selector/raw/main/img/extension_screenshot.png)
 
-## New in 2.0
+## ❓ Frequently Asked Questions (FAQ)
 
-The following options can now be enabled when switching graphics mode:
+- [See here](https://github.com/bayasdev/envycontrol/wiki/Frequently-Asked-Questions).
 
-### hybrid
+- Also read [fixes for some common problems](https://github.com/DaVikingMan/EnvyControl/wiki/Fixes-for-some-common-problems)
 
-- RTD3 power management (for Turing and newer GPUs)
+## 📝 Roadmap for v3
 
-### nvidia
+- [ ] Make customizable options available as switches (eg: RTD3, composition pipeline, etc).
+- [ ] Nvidia mode on Wayland (Nvidia needs to fix their Linux drivers first).
+- [ ] Plasma applet.
+- [ ] COPR package.
 
-- ForceCompositionPipeline (fixes tearing on external screens wired to the Nvidia GPU)
-- Coolbits (allows overclocking on supported GPUs)
+## 🐞 I found a bug
 
-## Frequently Asked Questions
-
-[See here](https://github.com/geminis3/envycontrol/wiki/Frequently-Asked-Questions).
-
-Also read [fixes for some common problems](https://github.com/DaVikingMan/EnvyControl/wiki/Fixes-for-some-common-problems)
-
-## What to do if you have found a bug
-
-Feel free to open an issue, don't forget to provide some basic info.
+Feel free to open an issue, don't forget to provide some basic info such as:
 
 - Linux distribution
 - Linux kernel version and type
