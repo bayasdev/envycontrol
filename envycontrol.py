@@ -398,6 +398,7 @@ def main():
     parser.add_argument('-q', '--query', action='store_true', help='query the current graphics mode set by EnvyControl')
     parser.add_argument('--dm', type=str, metavar='DISPLAY_MANAGER', action='store',
                         help='Manually specify your Display Manager. This is required only for systems without systemd. Supported DMs: gdm, sddm, lightdm')
+    parser.add_argument('--reset', action='store_true', help='remove EnvyControl settings')
     parser.add_argument('--reset_sddm', action='store_true', help='restore original SDDM Xsetup file')
     # print help if no arg is provided
     if len(sys.argv) == 1:
@@ -408,6 +409,8 @@ def main():
         _query_mode()
     elif args.version:
         _print_version()
+    elif args.reset:
+        _cleanup()
     elif args.reset_sddm:
         _reset_sddm()
     elif args.switch:
