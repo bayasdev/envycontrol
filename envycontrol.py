@@ -399,7 +399,7 @@ def main():
     parser.add_argument('--dm', type=str, metavar='DISPLAY_MANAGER', action='store',
                         help='Manually specify your Display Manager. This is required only for systems without systemd. Supported DMs: gdm, sddm, lightdm')
     parser.add_argument('--reset', action='store_true', help='remove EnvyControl settings')
-    parser.add_argument('--reset_sddm', action='store_true', help='restore original SDDM Xsetup file')
+    parser.add_argument('--reset-sddm', action='store_true', help='restore original SDDM Xsetup file')
     # print help if no arg is provided
     if len(sys.argv) == 1:
         parser.print_help()
