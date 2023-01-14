@@ -52,7 +52,7 @@ sudo systemctl enable nvidia-{suspend,resume,hibernate}
 
 ### `/usr/share/sddm/scripts/Xsetup` is missing on my system
 
-Please run `sudo envycontrol --reset_sddm`.
+Please run `sudo envycontrol --reset-sddm`.
 
 ## ⬇️ Getting EnvyControl
 
