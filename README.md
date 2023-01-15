@@ -73,7 +73,7 @@ Please run `sudo envycontrol --reset-sddm`.
 ## ⚡️ Usage
 
 ```
-usage: envycontrol.py [-h] [-v] [-s MODE] [-q] [--dm DISPLAY_MANAGER] [--reset_sddm]
+usage: envycontrol.py [-h] [-v] [-s MODE] [-q] [--dm DISPLAY_MANAGER] [--reset] [--reset-sddm]
 
 options:
   -h, --help            show this help message and exit
@@ -81,8 +81,10 @@ options:
   -s MODE, --switch MODE
                         switch the graphics mode, supported modes: integrated, hybrid, nvidia
   -q, --query           query the current graphics mode set by EnvyControl
-  --dm DISPLAY_MANAGER  Manually specify your Display Manager. This is required only for systems without systemd. Supported DMs: gdm, sddm, lightdm
-  --reset_sddm          restore original SDDM Xsetup file
+  --dm DISPLAY_MANAGER  Manually specify your Display Manager. This is required only for systems without systemd.
+                        Supported DMs: gdm, sddm, lightdm
+  --reset               remove EnvyControl settings
+  --reset-sddm          restore original SDDM Xsetup file
 ```
 
 **Read a detailed explanation about EnvyControl graphics modes [here](https://github.com/bayasdev/envycontrol/wiki/Frequently-Asked-Questions#graphics-modes-explained).**
