@@ -5,7 +5,7 @@ import os
 import re
 import subprocess
 
-VERSION = '2.3.1'
+VERSION = '2.3.2'
 
 BLACKLIST_PATH = '/etc/modprobe.d/blacklist-nvidia.conf'
 
