@@ -302,7 +302,7 @@ def _check_display_manager():
     pattern = re.compile(r'(\/usr\/bin\/|\/usr\/sbin\/)(.*)')
     try:
         with open('/etc/systemd/system/display-manager.service',mode='r', encoding='utf-8') as f:
-            display_manager = pattern.findall(f.read())[0][1]
+            display_manager = re.sub(r'\W+', '', pattern.findall(f.read())[0][1])
     except Exception:
         display_manager = ''
         print('Warning: automatic Display Manager detection is not available')
