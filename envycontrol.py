@@ -271,17 +271,15 @@ def _cleanup():
 
 
 def _get_igpu_vendor():
-    pattern_intel = re.compile(r'(VGA).*(Intel)')
-    pattern_amd = re.compile(r'(VGA).*(ATI|AMD|AMD\/ATI)')
-    lspci = subprocess.run(
-        ['lspci'], stdout=subprocess.PIPE).stdout.decode('utf-8')
-    if pattern_intel.findall(lspci):
-        return 'intel'
-    elif pattern_amd.findall(lspci):
-        return 'amd'
-    else:
-        print('Error: could not find Intel or AMD iGPU')
-        sys.exit(1)
+    lspci_output = subprocess.check_output(["lspci"]).decode('utf-8')
+    for line in lspci_output.splitlines():
+        if 'VGA compatible controller' in line:
+            if 'Intel' in line:
+                return 'intel'
+            elif 'ATI' in line or 'AMD' in line or 'AMD/ATI' in line:
+                return 'amd'
+    print('Error: could not find Intel or AMD iGPU')
+    sys.exit(1)
 
 
 def _get_amd_igpu_name():
