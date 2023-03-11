@@ -254,20 +254,36 @@ def _switcher(mode, display_manager=''):
 
 
 def _cleanup():
-    # Remove all files created by EnvyControl
-    to_remove = (BLACKLIST_PATH, UDEV_INTEGRATED_PATH, UDEV_PM_PATH, XORG_PATH, EXTRA_PATH,
-                 '/etc/X11/xorg.conf.d/90-nvidia.conf', MODESET_PATH, LIGHTDM_SCRIPT_PATH, LIGHTDM_CONFIG_PATH)
-    for file in to_remove:
+    # Define list of files to remove
+    to_remove = [
+        BLACKLIST_PATH,
+        UDEV_INTEGRATED_PATH,
+        UDEV_PM_PATH,
+        XORG_PATH,
+        EXTRA_PATH,
+        '/etc/X11/xorg.conf.d/90-nvidia.conf',
+        MODESET_PATH,
+        LIGHTDM_SCRIPT_PATH,
+        LIGHTDM_CONFIG_PATH,
+    ]
+
+    # Remove each file in the list
+    for file_path in to_remove:
         try:
-            os.remove(file)
+            os.remove(file_path)
+            print(f"Removed file {file_path}")
         except OSError as e:
             if e.errno != 2:
-                print(f'Error: {e}')
-                sys.exit(1)
-    # restore Xsetup backup if found
-    if os.path.exists(SDDM_XSETUP_PATH+'.bak'):
-        with open(SDDM_XSETUP_PATH+'.bak', mode='r', encoding='utf-8') as f:
+                print(f"Error removing file '{file_path}': {e}")
+
+    # Restore Xsetup backup if found
+    backup_path = SDDM_XSETUP_PATH + ".bak"
+    if os.path.exists(backup_path):
+        with open(backup_path, mode="r", encoding="utf-8") as f:
             _create_file(SDDM_XSETUP_PATH, f.read())
+        # Remove backup
+        os.remove(backup_path)
+        print(f"Removed file {backup_path}")
 
 
 def _get_igpu_vendor():
@@ -325,39 +341,33 @@ def _get_display_manager():
 
 
 def _setup_display_manager(display_manager):
-    # setup the Xrandr script if necessary
-    # get igpu vendor to use if needed
-    igpu_vendor = _get_igpu_vendor()
-    if display_manager == 'sddm':
-        # backup Xsetup
-        if os.path.exists(SDDM_XSETUP_PATH):
-            with open(SDDM_XSETUP_PATH, mode='r', encoding='utf-8') as f:
-                _create_file(SDDM_XSETUP_PATH+'.bak', f.read())
-        if igpu_vendor == "intel":
-            _create_file(SDDM_XSETUP_PATH,
-                         NVIDIA_XRANDR_SCRIPT.format("modesetting"))
-        else:
-            amd_name = _get_amd_igpu_name()
-            _create_file(SDDM_XSETUP_PATH,
-                         NVIDIA_XRANDR_SCRIPT.format(amd_name))
-        subprocess.run(['chmod', '+x', SDDM_XSETUP_PATH],
-                       stdout=subprocess.DEVNULL)
-    elif display_manager == 'lightdm':
-        if igpu_vendor == "amd":
-            amd_name = _get_amd_igpu_name()
-            _create_file(LIGHTDM_SCRIPT_PATH,
-                         NVIDIA_XRANDR_SCRIPT.format(amd_name))
-        else:
-            _create_file(LIGHTDM_SCRIPT_PATH,
-                         NVIDIA_XRANDR_SCRIPT.format("modesetting"))
-        subprocess.run(['chmod', '+x', LIGHTDM_SCRIPT_PATH],
-                       stdout=subprocess.DEVNULL)
-        # create config
-        _create_file(LIGHTDM_CONFIG_PATH, LIGHTDM_CONFIG_CONTENT)
-    elif display_manager not in ['', 'gdm', 'gdm3']:
+    if display_manager in ['', 'gdm', 'gdm3']:
+        return
+    elif display_manager not in ['sddm', 'lightdm']:
         print('Error: provided Display Manager is not valid')
         print('Supported Display Managers: gdm, sddm, lightdm')
         sys.exit(1)
+
+    igpu_vendor = _get_igpu_vendor()
+    xrandr_script = ''
+    if igpu_vendor == 'intel':
+        xrandr_script = NVIDIA_XRANDR_SCRIPT.format('modesetting')
+    else:
+        amd_name = _get_amd_igpu_name()
+        xrandr_script = NVIDIA_XRANDR_SCRIPT.format(amd_name)
+
+    if display_manager == 'sddm':
+        if os.path.exists(SDDM_XSETUP_PATH):
+            with open(SDDM_XSETUP_PATH, mode='r', encoding='utf-8') as f:
+                _create_file(SDDM_XSETUP_PATH+'.bak', f.read())
+        _create_file(SDDM_XSETUP_PATH, xrandr_script)
+        subprocess.run(['chmod', '+x', SDDM_XSETUP_PATH],
+                       stdout=subprocess.DEVNULL)
+    elif display_manager == 'lightdm':
+        _create_file(LIGHTDM_SCRIPT_PATH, xrandr_script)
+        subprocess.run(['chmod', '+x', LIGHTDM_SCRIPT_PATH],
+                       stdout=subprocess.DEVNULL)
+        _create_file(LIGHTDM_CONFIG_PATH, LIGHTDM_CONFIG_CONTENT)
 
 
 def _rebuild_initramfs():
@@ -393,6 +403,7 @@ def _create_file(path, content):
         # Create parent folders if needed
         if not os.path.exists(os.path.dirname(path)):
             os.makedirs(os.path.dirname(path))
+            print(f"Created file {path}")
         with open(path, mode='w', encoding='utf-8') as f:
             f.write(content)
     except OSError as e:
@@ -440,6 +451,7 @@ def main():
                         help='remove EnvyControl settings')
     parser.add_argument('--reset-sddm', action='store_true',
                         help='restore original SDDM Xsetup file')
+
     # print help if no arg is provided
     if len(sys.argv) == 1:
         parser.print_help()
