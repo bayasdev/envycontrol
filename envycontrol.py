@@ -300,7 +300,7 @@ def _get_pci_bus():
     lspci_output = subprocess.check_output(['lspci']).decode('utf-8')
     for line in lspci_output.splitlines():
         if 'NVIDIA' in line and ('VGA compatible controller' in line or '3D controller' in line):
-            pci_bus_id = line.split()[0]
+            pci_bus_id = line.split()[0].replace("0000:", "")
             break
     else:
         print(f'Error: switching directly from integrated to Nvidia mode is not supported\nTry switching to hybrid mode first!')
