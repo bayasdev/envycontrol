@@ -75,7 +75,7 @@ EndSection
 Section "Device"
     Identifier "nvidia"
     Driver "nvidia"
-    BusID "PCI:{}"
+    BusID "{}"
 EndSection
 
 Section "Screen"
@@ -106,7 +106,7 @@ EndSection
 Section "Device"
     Identifier "nvidia"
     Driver "nvidia"
-    BusID "PCI:{}"
+    BusID "{}"
 EndSection
 
 Section "Screen"
@@ -286,15 +286,20 @@ def _get_amd_igpu_name():
     return name
 
 def _get_pci_bus():
-    pattern = re.compile(
-        r'([0-9a-f]{2}:[0-9a-z]{2}.[0-9]).*(VGA compatible controller: NVIDIA|3D controller: NVIDIA)')
-    lspci = subprocess.run(['lspci'], stdout=subprocess.PIPE).stdout.decode('utf-8')
-    try:
-        # Need to return Bus ID in PCI:X:X:X format
-        return ':'.join([str(int(element, 16)) for element in pattern.findall(lspci)[0][0].replace('.', ':').split(':')])
-    except Exception:
-        print(f'Error: switching directly from integrated to Nvidia mode is not supported\nTry switching to hybrid mode first!')
-        sys.exit(1)
+    lspci_output = subprocess.check_output(['lspci', '-nn']).decode('utf-8')
+    for line in lspci_output.split('\n'):
+        if 'NVIDIA' in line and ('VGA compatible controller' in line or '3D controller' in line):
+            pci_bus_id = line.split()[0]
+        else:
+            print(f'Error: switching directly from integrated to Nvidia mode is not supported\nTry switching to hybrid mode first!')
+            sys.exit(1)
+    
+    # return Bus ID in PCI:bus:device:function format
+    parts = pci_bus_id.split(':')
+    bus = parts[1]
+    device = parts[2]
+    function = parts[3][0]
+    return f"PCI:{bus}:{device}:{function}"
 
 def _check_display_manager():
     # automatically detect the current Display Manager
