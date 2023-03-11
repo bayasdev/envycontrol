@@ -297,7 +297,7 @@ def _get_amd_igpu_name():
 
 
 def _get_pci_bus():
-    lspci_output = subprocess.check_output(['lspci', '-nn']).decode('utf-8')
+    lspci_output = subprocess.check_output(['lspci']).decode('utf-8')
     for line in lspci_output.split('\n'):
         if 'NVIDIA' in line and ('VGA compatible controller' in line or '3D controller' in line):
             pci_bus_id = line.split()[0]
