@@ -301,16 +301,16 @@ def _get_pci_bus():
     for line in lspci_output.split('\n'):
         if 'NVIDIA' in line and ('VGA compatible controller' in line or '3D controller' in line):
             pci_bus_id = line.split()[0]
-        else:
-            print(f'Error: switching directly from integrated to Nvidia mode is not supported\nTry switching to hybrid mode first!')
-            sys.exit(1)
+            break
+    else:
+        print(f'Error: switching directly from integrated to Nvidia mode is not supported\nTry switching to hybrid mode first!')
+        sys.exit(1)
 
     # return Bus ID in PCI:bus:device:function format
-    parts = pci_bus_id.split(':')
-    bus = parts[1]
-    device = parts[2]
-    function = parts[3][0]
-    return f"PCI:{bus}:{device}:{function}"
+    bus, device_function = pci_bus_id.split(":")
+    device, function = device_function.split(".")
+
+    return f"PCI:{int(bus)}:{int(device)}:{int(function)}"
 
 
 def _check_display_manager():
