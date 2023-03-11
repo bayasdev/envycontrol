@@ -5,7 +5,9 @@ import os
 import re
 import subprocess
 
-VERSION = '2.3.2'
+# begin constants definition
+
+VERSION = '2.4'
 
 BLACKLIST_PATH = '/etc/modprobe.d/blacklist-nvidia.conf'
 
@@ -179,6 +181,8 @@ xrandr --setprovideroutputsource "{}" NVIDIA-0
 xrandr --auto
 '''
 
+# end constants definition
+
 VERBOSE = False
 
 
@@ -187,76 +191,85 @@ def _switcher(mode, display_manager=''):
     yes = ('yes', 'y', 'ye')
     if mode == 'integrated':
         _cleanup()
-        try:
-            # Blacklist all nouveau and Nvidia modules
-            _create_file(BLACKLIST_PATH, BLACKLIST_CONTENT)
-            # Power off the Nvidia GPU with udev rules
-            _create_file(UDEV_INTEGRATED_PATH, UDEV_INTEGRATED)
-        except Exception as e:
-            print(f'ERROR: {e}')
-            sys.exit(1)
+
+        # blacklist all nouveau and Nvidia modules
+        _create_file(BLACKLIST_PATH, BLACKLIST_CONTENT)
+
+        # power off the Nvidia GPU with udev rules
+        _create_file(UDEV_INTEGRATED_PATH, UDEV_INTEGRATED)
+
         _rebuild_initramfs()
     elif mode == 'hybrid':
         _cleanup()
-        # Enable modeset for Nvidia driver
+
+        # enable modeset for Nvidia driver
+        _create_file(MODESET_PATH, MODESET_PM)
+
+        # extra user choices
+        # TODO: implement them as flags
         choice = input('Enable RTD3 Power Management? (y/N): ').lower()
         if choice in yes:
             _create_file(UDEV_PM_PATH, UDEV_PM)
-            _create_file(MODESET_PATH, MODESET_PM)
-        else:
-            _create_file(MODESET_PATH, MODESET_CONTENT)
+
         _rebuild_initramfs()
     elif mode == 'nvidia':
         _cleanup()
+
         # detect if Intel or AMD iGPU
         igpu_vendor = _get_igpu_vendor()
+
         # get the Nvidia dGPU PCI bus
         pci_bus = _get_pci_bus()
-        # get display manager
+
+        # try to get the display manager
         if display_manager == '':
             display_manager = _get_display_manager()
-        try:
-            # Create X.org config
-            if igpu_vendor == 'intel':
-                _create_file(XORG_PATH, XORG_INTEL.format(pci_bus))
-                _setup_display_manager(display_manager)
-            elif igpu_vendor == 'amd':
-                _create_file(XORG_PATH, XORG_AMD.format(pci_bus))
-                _setup_display_manager(display_manager)
-            # Enable modeset for Nvidia driver
-            _create_file(MODESET_PATH, MODESET_CONTENT)
-            choice = input('Enable ForceCompositionPipeline? (y/N): ').lower()
-            if choice in yes:
-                enable_comp = True
-            else:
-                enable_comp = False
-            choice = input('Enable Coolbits? (y/N): ').lower()
-            if choice in yes:
-                enable_coolbits = True
-            else:
-                enable_coolbits = False
-            if enable_comp and enable_coolbits:
-                _create_file(EXTRA_PATH, EXTRA_CONTENT +
-                             TEARING_FIX+COOLBITS+'EndSection\n')
-            elif enable_comp:
-                _create_file(EXTRA_PATH, EXTRA_CONTENT +
-                             TEARING_FIX+'EndSection\n')
-            elif enable_coolbits:
-                _create_file(EXTRA_PATH, EXTRA_CONTENT+COOLBITS+'EndSection\n')
-        except Exception as e:
-            print(f'ERROR: {e}')
-            sys.exit(1)
+
+        # create the X.org config
+        if igpu_vendor == 'intel':
+            _create_file(XORG_PATH, XORG_INTEL.format(pci_bus))
+        elif igpu_vendor == 'amd':
+            _create_file(XORG_PATH, XORG_AMD.format(pci_bus))
+
+        # setup the display manager
+        _setup_display_manager(display_manager)
+
+        # enable modeset for Nvidia driver
+        _create_file(MODESET_PATH, MODESET_CONTENT)
+
+        # extra user choices
+        # TODO: implement them as flags
+        choice = input('Enable ForceCompositionPipeline? (y/N): ').lower()
+        if choice in yes:
+            enable_comp = True
+        else:
+            enable_comp = False
+        choice = input('Enable Coolbits? (y/N): ').lower()
+        if choice in yes:
+            enable_coolbits = True
+        else:
+            enable_coolbits = False
+        if enable_comp and enable_coolbits:
+            _create_file(EXTRA_PATH, EXTRA_CONTENT +
+                         TEARING_FIX+COOLBITS+'EndSection\n')
+        elif enable_comp:
+            _create_file(EXTRA_PATH, EXTRA_CONTENT +
+                         TEARING_FIX+'EndSection\n')
+        elif enable_coolbits:
+            _create_file(EXTRA_PATH, EXTRA_CONTENT+COOLBITS+'EndSection\n')
+
         _rebuild_initramfs()
     else:
         print('ERROR: provided graphics mode is not valid')
         print('Supported graphics modes: integrated, nvidia, hybrid')
         sys.exit(1)
+
     print(
         f'Graphics mode set to: {mode}\nPlease reboot your computer for changes to apply!')
 
 
 def _cleanup():
-    # Define list of files to remove
+    # define list of files to remove
     to_remove = [
         BLACKLIST_PATH,
         UDEV_INTEGRATED_PATH,
@@ -269,21 +282,23 @@ def _cleanup():
         LIGHTDM_CONFIG_PATH,
     ]
 
-    # Remove each file in the list
+    # remove each file in the list
     for file_path in to_remove:
         try:
             os.remove(file_path)
             VERBOSE and print(f"DEBUG: Removed file {file_path}")
         except OSError as e:
+            # only warn if file exists (code 2)
             if e.errno != 2:
                 print(f"ERROR: failed to remove file '{file_path}': {e}")
 
-    # Restore Xsetup backup if found
+    # restore Xsetup backup if found
     backup_path = SDDM_XSETUP_PATH + ".bak"
     if os.path.exists(backup_path):
+        VERBOSE and print("INFO: Restoring Xsetup backup")
         with open(backup_path, mode="r", encoding="utf-8") as f:
             _create_file(SDDM_XSETUP_PATH, f.read())
-        # Remove backup
+        # remove backup
         os.remove(backup_path)
         VERBOSE and print(f"DEBUG: Removed file {backup_path}")
 
@@ -293,8 +308,10 @@ def _get_igpu_vendor():
     for line in lspci_output.splitlines():
         if 'VGA compatible controller' in line:
             if 'Intel' in line:
+                VERBOSE and print("INFO: Detected Intel iGPU")
                 return 'intel'
             elif 'ATI' in line or 'AMD' in line or 'AMD/ATI' in line:
+                VERBOSE and print("INFO: Detected AMD iGPU")
                 return 'amd'
     print('ERROR: could not find Intel or AMD iGPU')
     sys.exit(1)
@@ -316,16 +333,16 @@ def _get_pci_bus():
     lspci_output = subprocess.check_output(['lspci']).decode('utf-8')
     for line in lspci_output.splitlines():
         if 'NVIDIA' in line and ('VGA compatible controller' in line or '3D controller' in line):
+            # remove leading zeros
             pci_bus_id = line.split()[0].replace("0000:", "")
             break
     else:
         print(f'ERROR: switching directly from integrated to Nvidia mode is not supported\nTry switching to hybrid mode first!')
         sys.exit(1)
 
-    # return Bus ID in PCI:bus:device:function format
+    # need to return the BusID in PCI:bus:device:function format
     bus, device_function = pci_bus_id.split(":")
     device, function = device_function.split(".")
-
     return f"PCI:{int(bus, 16)}:{int(device, 16)}:{int(function, 16)}"
 
 
@@ -336,13 +353,16 @@ def _get_display_manager():
             content = f.read()
             match = re.search(r'ExecStart=(.+)\n', content)
             if match:
+                # only return the final component of the path
                 display_manager = os.path.basename(match.group(1))
+                VERBOSE and print(f"INFO: Detected '{display_manager}'")
     except FileNotFoundError:
         print('Warning: Display Manager detection is not available on this system')
     return display_manager
 
 
 def _setup_display_manager(display_manager):
+    # no further action is required for gdm
     if display_manager in ['', 'gdm', 'gdm3']:
         return
     elif display_manager not in ['sddm', 'lightdm']:
@@ -350,6 +370,7 @@ def _setup_display_manager(display_manager):
         print('Supported Display Managers: gdm, sddm, lightdm')
         sys.exit(1)
 
+    # create the xrandr according to the iGPU vendor and driver
     igpu_vendor = _get_igpu_vendor()
     xrandr_script = ''
     if igpu_vendor == 'intel':
@@ -359,7 +380,9 @@ def _setup_display_manager(display_manager):
         xrandr_script = NVIDIA_XRANDR_SCRIPT.format(amd_name)
 
     if display_manager == 'sddm':
+        # backup Xsetup
         if os.path.exists(SDDM_XSETUP_PATH):
+            VERBOSE and print("INFO: Creating Xsetup backup")
             with open(SDDM_XSETUP_PATH, mode='r', encoding='utf-8') as f:
                 _create_file(SDDM_XSETUP_PATH+'.bak', f.read())
         _create_file(SDDM_XSETUP_PATH, xrandr_script)
@@ -384,6 +407,7 @@ def _rebuild_initramfs():
         command = ['dracut', '--force', '--regenerate-all']
     else:
         command = []
+
     if len(command) != 0:
         print('Rebuilding the initramfs...')
         p = subprocess.run(command, stdout=subprocess.DEVNULL,
@@ -402,12 +426,12 @@ def _check_root():
 
 def _create_file(path, content):
     try:
-        # Create parent folders if needed
+        # create the parent folders if needed
         if not os.path.exists(os.path.dirname(path)):
             os.makedirs(os.path.dirname(path))
         with open(path, mode='w', encoding='utf-8') as f:
             f.write(content)
-        if (VERBOSE):
+        if VERBOSE:
             print(f"DEBUG: Created file {path}")
             print(content)
     except OSError as e:
@@ -421,14 +445,17 @@ def _query_mode():
         mode = 'nvidia'
     else:
         mode = 'hybrid'
+
     print(f'Current graphics mode is: {mode}')
 
 
 def _reset_sddm():
     _check_root()
+
     _create_file(SDDM_XSETUP_PATH, SDDM_XSETUP_CONTENT)
     subprocess.run(['chmod', '+x', SDDM_XSETUP_PATH],
                    stdout=subprocess.DEVNULL)
+
     print('Operation completed successfully!')
 
 
@@ -437,7 +464,7 @@ def _print_version():
 
 
 def main():
-    # argument parsing
+    # define CLI arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--version', action='store_true',
                         help='show this program\'s version number and exit')
