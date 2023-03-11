@@ -235,12 +235,12 @@ def _switcher(mode, display_manager=''):
                 enable_coolbits = False
             if enable_comp and enable_coolbits:
                 _create_file(EXTRA_PATH, EXTRA_CONTENT +
-                             TEARING_FIX+COOLBITS+'EndSection')
+                             TEARING_FIX+COOLBITS+'EndSection\n')
             elif enable_comp:
                 _create_file(EXTRA_PATH, EXTRA_CONTENT +
-                             TEARING_FIX+'EndSection')
+                             TEARING_FIX+'EndSection\n')
             elif enable_coolbits:
-                _create_file(EXTRA_PATH, EXTRA_CONTENT+COOLBITS+'EndSection')
+                _create_file(EXTRA_PATH, EXTRA_CONTENT+COOLBITS+'EndSection\n')
         except Exception as e:
             print(f'Error: {e}')
             sys.exit(1)
@@ -298,7 +298,7 @@ def _get_amd_igpu_name():
 
 def _get_pci_bus():
     lspci_output = subprocess.check_output(['lspci']).decode('utf-8')
-    for line in lspci_output.split('\n'):
+    for line in lspci_output.splitlines():
         if 'NVIDIA' in line and ('VGA compatible controller' in line or '3D controller' in line):
             pci_bus_id = line.split()[0]
             break
