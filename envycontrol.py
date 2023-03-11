@@ -374,7 +374,8 @@ def _rebuild_initramfs():
         command = []
     if len(command) != 0:
         print('Rebuilding initramfs...')
-        p = subprocess.run(command, stdout=subprocess.DEVNULL)
+        p = subprocess.run(command, stdout=subprocess.DEVNULL,
+                           stderr=subprocess.DEVNULL)
         if p.returncode == 0:
             print('Successfully rebuilt initramfs!')
         else:
