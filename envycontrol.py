@@ -310,7 +310,7 @@ def _get_pci_bus():
     bus, device_function = pci_bus_id.split(":")
     device, function = device_function.split(".")
 
-    return f"PCI:{int(bus)}:{int(device)}:{int(function)}"
+    return f"PCI:{int(bus, 16)}:{int(device, 16)}:{int(function, 16)}"
 
 
 def _check_display_manager():
