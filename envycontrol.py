@@ -179,6 +179,8 @@ xrandr --setprovideroutputsource "{}" NVIDIA-0
 xrandr --auto
 '''
 
+VERBOSE = False
+
 
 def _switcher(mode, display_manager=''):
     _check_root()
@@ -191,7 +193,7 @@ def _switcher(mode, display_manager=''):
             # Power off the Nvidia GPU with udev rules
             _create_file(UDEV_INTEGRATED_PATH, UDEV_INTEGRATED)
         except Exception as e:
-            print(f'Error: {e}')
+            print(f'ERROR: {e}')
             sys.exit(1)
         _rebuild_initramfs()
     elif mode == 'hybrid':
@@ -242,11 +244,11 @@ def _switcher(mode, display_manager=''):
             elif enable_coolbits:
                 _create_file(EXTRA_PATH, EXTRA_CONTENT+COOLBITS+'EndSection\n')
         except Exception as e:
-            print(f'Error: {e}')
+            print(f'ERROR: {e}')
             sys.exit(1)
         _rebuild_initramfs()
     else:
-        print('Error: provided graphics mode is not valid')
+        print('ERROR: provided graphics mode is not valid')
         print('Supported graphics modes: integrated, nvidia, hybrid')
         sys.exit(1)
     print(
@@ -271,10 +273,10 @@ def _cleanup():
     for file_path in to_remove:
         try:
             os.remove(file_path)
-            print(f"Removed file {file_path}")
+            VERBOSE and print(f"DEBUG: Removed file {file_path}")
         except OSError as e:
             if e.errno != 2:
-                print(f"Error removing file '{file_path}': {e}")
+                print(f"ERROR: failed to remove file '{file_path}': {e}")
 
     # Restore Xsetup backup if found
     backup_path = SDDM_XSETUP_PATH + ".bak"
@@ -283,7 +285,7 @@ def _cleanup():
             _create_file(SDDM_XSETUP_PATH, f.read())
         # Remove backup
         os.remove(backup_path)
-        print(f"Removed file {backup_path}")
+        VERBOSE and print(f"DEBUG: Removed file {backup_path}")
 
 
 def _get_igpu_vendor():
@@ -294,7 +296,7 @@ def _get_igpu_vendor():
                 return 'intel'
             elif 'ATI' in line or 'AMD' in line or 'AMD/ATI' in line:
                 return 'amd'
-    print('Error: could not find Intel or AMD iGPU')
+    print('ERROR: could not find Intel or AMD iGPU')
     sys.exit(1)
 
 
@@ -306,7 +308,7 @@ def _get_amd_igpu_name():
     if pattern.findall(xrandr):
         name = re.search(pattern, xrandr).group(0)[5:]
     else:
-        name = "Error: could not find AMD iGPU"
+        name = "ERROR: could not find AMD iGPU"
     return name
 
 
@@ -317,7 +319,7 @@ def _get_pci_bus():
             pci_bus_id = line.split()[0].replace("0000:", "")
             break
     else:
-        print(f'Error: switching directly from integrated to Nvidia mode is not supported\nTry switching to hybrid mode first!')
+        print(f'ERROR: switching directly from integrated to Nvidia mode is not supported\nTry switching to hybrid mode first!')
         sys.exit(1)
 
     # return Bus ID in PCI:bus:device:function format
@@ -344,7 +346,7 @@ def _setup_display_manager(display_manager):
     if display_manager in ['', 'gdm', 'gdm3']:
         return
     elif display_manager not in ['sddm', 'lightdm']:
-        print('Error: provided Display Manager is not valid')
+        print('ERROR: provided Display Manager is not valid')
         print('Supported Display Managers: gdm, sddm, lightdm')
         sys.exit(1)
 
@@ -383,18 +385,18 @@ def _rebuild_initramfs():
     else:
         command = []
     if len(command) != 0:
-        print('Rebuilding initramfs...')
+        print('Rebuilding the initramfs...')
         p = subprocess.run(command, stdout=subprocess.DEVNULL,
                            stderr=subprocess.DEVNULL)
         if p.returncode == 0:
-            print('Successfully rebuilt initramfs!')
+            print('Successfully rebuilt the initramfs!')
         else:
-            print('Error: an error ocurred rebuilding the initramfs')
+            print('ERROR: an error ocurred while rebuilding the initramfs')
 
 
 def _check_root():
     if not os.geteuid() == 0:
-        print('Error: this operation requires root privileges')
+        print('ERROR: this operation requires root privileges')
         sys.exit(1)
 
 
@@ -403,11 +405,13 @@ def _create_file(path, content):
         # Create parent folders if needed
         if not os.path.exists(os.path.dirname(path)):
             os.makedirs(os.path.dirname(path))
-            print(f"Created file {path}")
         with open(path, mode='w', encoding='utf-8') as f:
             f.write(content)
+        if (VERBOSE):
+            print(f"DEBUG: Created file {path}")
+            print(content)
     except OSError as e:
-        print(f"Error creating file '{path}': {e}")
+        print(f"ERROR: failed to create file '{path}': {e}")
 
 
 def _query_mode():
@@ -427,7 +431,7 @@ def _reset_sddm():
         subprocess.run(['chmod', '+x', SDDM_XSETUP_PATH],
                        stdout=subprocess.DEVNULL)
     except Exception as e:
-        print(f'Error: {e}')
+        print(f'ERROR: {e}')
         sys.exit(1)
     print('Operation completed successfully!')
 
@@ -451,12 +455,21 @@ def main():
                         help='remove EnvyControl settings')
     parser.add_argument('--reset-sddm', action='store_true',
                         help='restore original SDDM Xsetup file')
+    parser.add_argument('--verbose', default=False, action='store_true',
+                        help='enables additional logging (useful for debugging)')
 
     # print help if no arg is provided
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
     args = parser.parse_args()
+
+    # verbose toggle
+    if args.verbose:
+        global VERBOSE
+        VERBOSE = True
+        print('INFO: verbose mode is enabled')
+
     if args.query:
         _query_mode()
     elif args.version:
@@ -471,7 +484,7 @@ def main():
         else:
             _switcher(args.switch)
     elif args.dm and not args.switch:
-        print('Error: this option is intended to be used with --switch nvidia')
+        print('ERROR: this option is intended to be used with --switch nvidia')
         print('Example: sudo envycontrol --switch nvidia --dm sddm')
         sys.exit(1)
 
