@@ -212,7 +212,7 @@ def _switcher(mode, display_manager=''):
         pci_bus = _get_pci_bus()
         # get display manager
         if display_manager == '':
-            display_manager = _check_display_manager()
+            display_manager = _get_display_manager()
         try:
             # Create X.org config
             if igpu_vendor == 'intel':
@@ -311,19 +311,17 @@ def _get_pci_bus():
     return f"PCI:{int(bus, 16)}:{int(device, 16)}:{int(function, 16)}"
 
 
-def _check_display_manager():
-    # automatically detect the current Display Manager
-    # this depends on systemd
-    pattern = re.compile(r'(\/usr\/bin\/|\/usr\/sbin\/)(.*)')
+def _get_display_manager():
+    display_manager = ''
     try:
-        with open('/etc/systemd/system/display-manager.service', mode='r', encoding='utf-8') as f:
-            display_manager = re.sub(
-                r'\W+', '', pattern.findall(f.read())[0][1])
-    except Exception:
-        display_manager = ''
-        print('Warning: automatic Display Manager detection is not available')
-    finally:
-        return display_manager
+        with open('/etc/systemd/system/display-manager.service', 'r', encoding='utf-8') as f:
+            content = f.read()
+            match = re.search(r'ExecStart=(.+)\n', content)
+            if match:
+                display_manager = os.path.basename(match.group(1))
+    except FileNotFoundError:
+        print('Warning: Display Manager detection is not available on this system')
+    return display_manager
 
 
 def _setup_display_manager(display_manager):
