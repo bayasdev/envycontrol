@@ -179,7 +179,8 @@ xrandr --setprovideroutputsource "{}" NVIDIA-0
 xrandr --auto
 '''
 
-def _switcher(mode, display_manager = ''):
+
+def _switcher(mode, display_manager=''):
     _check_root()
     yes = ('yes', 'y', 'ye')
     if mode == 'integrated':
@@ -233,11 +234,13 @@ def _switcher(mode, display_manager = ''):
             else:
                 enable_coolbits = False
             if enable_comp and enable_coolbits:
-                _create_file(EXTRA_PATH,EXTRA_CONTENT+TEARING_FIX+COOLBITS+'EndSection')
+                _create_file(EXTRA_PATH, EXTRA_CONTENT +
+                             TEARING_FIX+COOLBITS+'EndSection')
             elif enable_comp:
-                _create_file(EXTRA_PATH,EXTRA_CONTENT+TEARING_FIX+'EndSection')
+                _create_file(EXTRA_PATH, EXTRA_CONTENT +
+                             TEARING_FIX+'EndSection')
             elif enable_coolbits:
-                _create_file(EXTRA_PATH,EXTRA_CONTENT+COOLBITS+'EndSection')
+                _create_file(EXTRA_PATH, EXTRA_CONTENT+COOLBITS+'EndSection')
         except Exception as e:
             print(f'Error: {e}')
             sys.exit(1)
@@ -246,11 +249,14 @@ def _switcher(mode, display_manager = ''):
         print('Error: provided graphics mode is not valid')
         print('Supported graphics modes: integrated, nvidia, hybrid')
         sys.exit(1)
-    print(f'Graphics mode set to: {mode}\nPlease reboot your computer for changes to apply!')
+    print(
+        f'Graphics mode set to: {mode}\nPlease reboot your computer for changes to apply!')
+
 
 def _cleanup():
     # Remove all files created by EnvyControl
-    to_remove = (BLACKLIST_PATH,UDEV_INTEGRATED_PATH, UDEV_PM_PATH, XORG_PATH, EXTRA_PATH, '/etc/X11/xorg.conf.d/90-nvidia.conf', MODESET_PATH, LIGHTDM_SCRIPT_PATH, LIGHTDM_CONFIG_PATH)
+    to_remove = (BLACKLIST_PATH, UDEV_INTEGRATED_PATH, UDEV_PM_PATH, XORG_PATH, EXTRA_PATH,
+                 '/etc/X11/xorg.conf.d/90-nvidia.conf', MODESET_PATH, LIGHTDM_SCRIPT_PATH, LIGHTDM_CONFIG_PATH)
     for file in to_remove:
         try:
             os.remove(file)
@@ -260,13 +266,15 @@ def _cleanup():
                 sys.exit(1)
     # restore Xsetup backup if found
     if os.path.exists(SDDM_XSETUP_PATH+'.bak'):
-            with open(SDDM_XSETUP_PATH+'.bak', mode='r', encoding='utf-8') as f:
-                _create_file(SDDM_XSETUP_PATH, f.read())
+        with open(SDDM_XSETUP_PATH+'.bak', mode='r', encoding='utf-8') as f:
+            _create_file(SDDM_XSETUP_PATH, f.read())
+
 
 def _get_igpu_vendor():
     pattern_intel = re.compile(r'(VGA).*(Intel)')
     pattern_amd = re.compile(r'(VGA).*(ATI|AMD|AMD\/ATI)')
-    lspci = subprocess.run(['lspci'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+    lspci = subprocess.run(
+        ['lspci'], stdout=subprocess.PIPE).stdout.decode('utf-8')
     if pattern_intel.findall(lspci):
         return 'intel'
     elif pattern_amd.findall(lspci):
@@ -275,15 +283,18 @@ def _get_igpu_vendor():
         print('Error: could not find Intel or AMD iGPU')
         sys.exit(1)
 
-def _get_amd_igpu_name():    
+
+def _get_amd_igpu_name():
     pattern = re.compile(r'(name:).*(ATI*|AMD*|AMD\/ATI)*')
-    xrandr = subprocess.run(['xrandr', '--listproviders'], capture_output=True, text=True).stdout
+    xrandr = subprocess.run(['xrandr', '--listproviders'],
+                            capture_output=True, text=True).stdout
 
     if pattern.findall(xrandr):
         name = re.search(pattern, xrandr).group(0)[5:]
     else:
         name = "Error: could not find AMD iGPU"
     return name
+
 
 def _get_pci_bus():
     lspci_output = subprocess.check_output(['lspci', '-nn']).decode('utf-8')
@@ -293,7 +304,7 @@ def _get_pci_bus():
         else:
             print(f'Error: switching directly from integrated to Nvidia mode is not supported\nTry switching to hybrid mode first!')
             sys.exit(1)
-    
+
     # return Bus ID in PCI:bus:device:function format
     parts = pci_bus_id.split(':')
     bus = parts[1]
@@ -301,18 +312,21 @@ def _get_pci_bus():
     function = parts[3][0]
     return f"PCI:{bus}:{device}:{function}"
 
+
 def _check_display_manager():
     # automatically detect the current Display Manager
     # this depends on systemd
     pattern = re.compile(r'(\/usr\/bin\/|\/usr\/sbin\/)(.*)')
     try:
-        with open('/etc/systemd/system/display-manager.service',mode='r', encoding='utf-8') as f:
-            display_manager = re.sub(r'\W+', '', pattern.findall(f.read())[0][1])
+        with open('/etc/systemd/system/display-manager.service', mode='r', encoding='utf-8') as f:
+            display_manager = re.sub(
+                r'\W+', '', pattern.findall(f.read())[0][1])
     except Exception:
         display_manager = ''
         print('Warning: automatic Display Manager detection is not available')
     finally:
         return display_manager
+
 
 def _setup_display_manager(display_manager):
     # setup the Xrandr script if necessary
@@ -324,24 +338,31 @@ def _setup_display_manager(display_manager):
             with open(SDDM_XSETUP_PATH, mode='r', encoding='utf-8') as f:
                 _create_file(SDDM_XSETUP_PATH+'.bak', f.read())
         if igpu_vendor == "intel":
-            _create_file(SDDM_XSETUP_PATH, NVIDIA_XRANDR_SCRIPT.format("modesetting"))
+            _create_file(SDDM_XSETUP_PATH,
+                         NVIDIA_XRANDR_SCRIPT.format("modesetting"))
         else:
             amd_name = _get_amd_igpu_name()
-            _create_file(SDDM_XSETUP_PATH, NVIDIA_XRANDR_SCRIPT.format(amd_name))
-        subprocess.run(['chmod','+x',SDDM_XSETUP_PATH], stdout=subprocess.DEVNULL)
+            _create_file(SDDM_XSETUP_PATH,
+                         NVIDIA_XRANDR_SCRIPT.format(amd_name))
+        subprocess.run(['chmod', '+x', SDDM_XSETUP_PATH],
+                       stdout=subprocess.DEVNULL)
     elif display_manager == 'lightdm':
         if igpu_vendor == "amd":
             amd_name = _get_amd_igpu_name()
-            _create_file(LIGHTDM_SCRIPT_PATH, NVIDIA_XRANDR_SCRIPT.format(amd_name))
+            _create_file(LIGHTDM_SCRIPT_PATH,
+                         NVIDIA_XRANDR_SCRIPT.format(amd_name))
         else:
-            _create_file(LIGHTDM_SCRIPT_PATH, NVIDIA_XRANDR_SCRIPT.format("modesetting"))
-        subprocess.run(['chmod','+x',LIGHTDM_SCRIPT_PATH], stdout=subprocess.DEVNULL)
+            _create_file(LIGHTDM_SCRIPT_PATH,
+                         NVIDIA_XRANDR_SCRIPT.format("modesetting"))
+        subprocess.run(['chmod', '+x', LIGHTDM_SCRIPT_PATH],
+                       stdout=subprocess.DEVNULL)
         # create config
         _create_file(LIGHTDM_CONFIG_PATH, LIGHTDM_CONFIG_CONTENT)
     elif display_manager not in ['', 'gdm', 'gdm3']:
         print('Error: provided Display Manager is not valid')
         print('Supported Display Managers: gdm, sddm, lightdm')
         sys.exit(1)
+
 
 def _rebuild_initramfs():
     # Debian and Ubuntu derivatives
@@ -363,10 +384,12 @@ def _rebuild_initramfs():
         else:
             print('Error: an error ocurred rebuilding the initramfs')
 
+
 def _check_root():
     if not os.geteuid() == 0:
         print('Error: this operation requires root privileges')
         sys.exit(1)
+
 
 def _create_file(path, content):
     # Create parent folders if needed
@@ -374,6 +397,7 @@ def _create_file(path, content):
         os.makedirs(os.path.dirname(path))
     with open(path, mode='w', encoding='utf-8') as f:
         f.write(content)
+
 
 def _query_mode():
     if os.path.exists(BLACKLIST_PATH) and os.path.exists(UDEV_INTEGRATED_PATH):
@@ -384,29 +408,38 @@ def _query_mode():
         mode = 'hybrid'
     print(f'Current graphics mode is: {mode}')
 
+
 def _reset_sddm():
     _check_root()
     try:
         _create_file(SDDM_XSETUP_PATH, SDDM_XSETUP_CONTENT)
-        subprocess.run(['chmod', '+x', SDDM_XSETUP_PATH], stdout=subprocess.DEVNULL)
+        subprocess.run(['chmod', '+x', SDDM_XSETUP_PATH],
+                       stdout=subprocess.DEVNULL)
     except Exception as e:
         print(f'Error: {e}')
         sys.exit(1)
     print('Operation completed successfully!')
 
+
 def _print_version():
     print(f'EnvyControl version {VERSION}')
+
 
 def main():
     # argument parsing
     parser = argparse.ArgumentParser()
-    parser.add_argument('-v', '--version', action='store_true', help='show this program\'s version number and exit')
-    parser.add_argument('-s', '--switch', type=str, metavar='MODE', action='store', help='switch the graphics mode, supported modes: integrated, hybrid, nvidia')
-    parser.add_argument('-q', '--query', action='store_true', help='query the current graphics mode set by EnvyControl')
+    parser.add_argument('-v', '--version', action='store_true',
+                        help='show this program\'s version number and exit')
+    parser.add_argument('-s', '--switch', type=str, metavar='MODE', action='store',
+                        help='switch the graphics mode, supported modes: integrated, hybrid, nvidia')
+    parser.add_argument('-q', '--query', action='store_true',
+                        help='query the current graphics mode set by EnvyControl')
     parser.add_argument('--dm', type=str, metavar='DISPLAY_MANAGER', action='store',
                         help='Manually specify your Display Manager. This is required only for systems without systemd. Supported DMs: gdm, sddm, lightdm')
-    parser.add_argument('--reset', action='store_true', help='remove EnvyControl settings')
-    parser.add_argument('--reset-sddm', action='store_true', help='restore original SDDM Xsetup file')
+    parser.add_argument('--reset', action='store_true',
+                        help='remove EnvyControl settings')
+    parser.add_argument('--reset-sddm', action='store_true',
+                        help='restore original SDDM Xsetup file')
     # print help if no arg is provided
     if len(sys.argv) == 1:
         parser.print_help()
@@ -429,6 +462,7 @@ def main():
         print('Error: this option is intended to be used with --switch nvidia')
         print('Example: sudo envycontrol --switch nvidia --dm sddm')
         sys.exit(1)
+
 
 if __name__ == '__main__':
     main()
