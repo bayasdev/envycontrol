@@ -426,13 +426,9 @@ def _query_mode():
 
 def _reset_sddm():
     _check_root()
-    try:
-        _create_file(SDDM_XSETUP_PATH, SDDM_XSETUP_CONTENT)
-        subprocess.run(['chmod', '+x', SDDM_XSETUP_PATH],
-                       stdout=subprocess.DEVNULL)
-    except Exception as e:
-        print(f'ERROR: {e}')
-        sys.exit(1)
+    _create_file(SDDM_XSETUP_PATH, SDDM_XSETUP_CONTENT)
+    subprocess.run(['chmod', '+x', SDDM_XSETUP_PATH],
+                   stdout=subprocess.DEVNULL)
     print('Operation completed successfully!')
 
 
