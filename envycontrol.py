@@ -389,11 +389,14 @@ def _check_root():
 
 
 def _create_file(path, content):
-    # Create parent folders if needed
-    if not os.path.exists(os.path.dirname(path)):
-        os.makedirs(os.path.dirname(path))
-    with open(path, mode='w', encoding='utf-8') as f:
-        f.write(content)
+    try:
+        # Create parent folders if needed
+        if not os.path.exists(os.path.dirname(path)):
+            os.makedirs(os.path.dirname(path))
+        with open(path, mode='w', encoding='utf-8') as f:
+            f.write(content)
+    except OSError as e:
+        print(f"Error creating file '{path}': {e}")
 
 
 def _query_mode():
