@@ -406,7 +406,7 @@ def rebuild_initramfs():
 
     if len(command) != 0:
         print('Rebuilding the initramfs...')
-        if logging.getLevelName() == logging.DEBUG:
+        if logging.getLogger().level == logging.DEBUG:
             p = subprocess.run(command)
         else:
             p = subprocess.run(
@@ -425,7 +425,7 @@ def create_file(path, content, executable=False):
         with open(path, mode='w', encoding='utf-8') as f:
             f.write(content)
         logging.info(f"Created file {path}")
-        if logging.getLevelName() == logging.DEBUG:
+        if logging.getLogger().level == logging.DEBUG:
             print(content)
 
         # add execution privilege
