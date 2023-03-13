@@ -167,11 +167,4 @@ If this ever happens please run `sudo envycontrol --reset-sddm`.
 
 ## 🐞 I have a problem
 
-Please open an issue, **don't forget to specify**:
-
-- Your laptop model (eg: Acer Predator G3-571)
-- What distribution you're using and current Linux kernel version (eg: Ubuntu 22.04.2 LTS with kernel 5.19)
-- Desktop Environment or Window Manager as well as your Display Manager (eg: Xfce with LightDM)
-- Propietary Nvidia driver version (eg: 530.30.02) **latest is not a valid answer**
-- `lspci` command output **(EnvyControl relies on it for hardware detection and I can't narrow down the problem without it)**
-- Try to reproduce your problem with the `--verbose` flag **(its output is really helpful for me)**
+Please open an issue, and **don't forget to all the requested fields!**
