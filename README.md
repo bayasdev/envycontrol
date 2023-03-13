@@ -167,4 +167,4 @@ If this ever happens please run `sudo envycontrol --reset-sddm`.
 
 ## 🐞 I have a problem
 
-Please open an issue, and **don't forget to all the requested fields!**
+Open an issue and **don't forget to complete all the requested fields!**
