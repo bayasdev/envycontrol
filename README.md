@@ -32,7 +32,35 @@ Keep it mind any custom X.org configuration may get deleted or overwritten when 
 - 🎮 Coolbits support for GPU overclocking
 - 🔥 Fix screen tearing with ForceCompositionPipeline
 
-## Graphics modes
+## 📖 Graphics modes
+
+### Integrated
+
+- The integrated Intel or AMD iGPU is used exclusively
+- Nvidia dGPU is turned off to reduce power consumption
+- External screens cannot be used if the video ports are wired to the dGPU
+
+### Hybrid
+
+- Enables PRIME render offloading
+- RTD3 allows the dGPU to be dynamically turned off when it's not used
+  - Available choices for the `--rtd3` flag (based on the [official documentation](http://us.download.nvidia.com/XFree86/Linux-x86_64/530.30.02/README/dynamicpowermanagement.html))
+    - `0` disabled
+    - `1` coarse-grained
+    - `2` fine-grained
+    - `3` fine-grained for Ampere and later
+  - Only works in Turing and later
+- Performance on external screens might be reduced
+
+### Nvidia
+
+- The Nvidia dGPU is used exclusively
+- Higher graphical performance and higher power consumption
+- Recommended when working with external screens
+  - If facing screen tearing enable ForceCompositionPipeline with the `--force-comp` flag
+- Allows overlocking (not recommended) with the `--coolbits` flag
+  - The default value is `28` bits however it can be manually adjusted according to this [guide](https://wiki.archlinux.org/title/NVIDIA/Tips_and_tricks#Overclocking_and_cooling)
+- Wayland sessions default to hybrid mode
 
 ## ⚡️ Usage
 
@@ -54,7 +82,7 @@ options:
   --verbose             Enable verbose mode
 ```
 
-### 📖 Some examples
+### Some examples
 
 Set graphics mode to integrated:
 
@@ -142,7 +170,8 @@ Please run `sudo envycontrol --reset-sddm`.
 Feel free to open an issue, don't forget to provide some basic info such as:
 
 - Linux distribution
-- Linux kernel version and type
+- Linux kernel version
 - Desktop Environment or Window Manager as well as your Display Manager
 - Nvidia driver version
 - EnvyControl version
+- EnvyControl output with the `--verbose` flag
