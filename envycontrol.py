@@ -464,7 +464,7 @@ def main():
     parser.add_argument('--reset', action='store_true',
                         help='Revert changes made by EnvyControl')
     parser.add_argument('--verbose', default=False, action='store_true',
-                        help='Enable additional logging')
+                        help='Enable verbose mode')
 
     # print help if no arg is provided
     if len(sys.argv) == 1:
