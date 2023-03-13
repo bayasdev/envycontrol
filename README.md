@@ -1,14 +1,16 @@
 <div align="center">
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./logos/dark.png">
-  <img alt="EnvyControl Logo" src="./logos/light.png" height="100px">
+  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/bayasdev/envycontrol/raw/main/logos/dark.png">
+  <img alt="EnvyControl Logo" src="https://github.com/bayasdev/envycontrol/raw/main/logos/light.png" height="100px">
 </picture>
+<br>
+Optimus made easy
 </div>
 <br>
 
 # 👁‍🗨 EnvyControl
 
-EnvyControl is a program aimed to provide an easy way to switch GPU modes on Nvidia Optimus systems (i.e laptops with hybrid Intel + Nvidia or AMD + Nvidia graphics configurations) under Linux.
+EnvyControl is a CLI tool that provides an easy way to switch between GPU modes on Nvidia Optimus systems (i.e laptops with hybrid Intel + Nvidia or AMD + Nvidia graphics configurations) under Linux.
 
 ### 📖 License
 
@@ -16,97 +18,94 @@ EnvyControl is free and open-source software released under the [MIT](https://gi
 
 ### ⚠️ Disclaimer
 
-**This software is provided 'as-is' without any express or implied warranty.** 
+**This software is provided 'as-is' without any express or implied warranty.**
 
-Keep it mind any custom X.org configuration may get deleted or overwritten when switching modes, please review this README and the source code before proceeding.
+Keep it mind any custom X.org configuration may get deleted or overwritten when switching modes.
 
-## 🐧 Compatible distros
+## ✨ Features
 
-EnvyControl should work on any distribution of Linux, see [tested distros](https://github.com/bayasdev/envycontrol/wiki/Frequently-Asked-Questions#tested-distros).
+- 🐍 Written in Python 3+ for portability and compatibility
+- 🐧 Works across all major Linux distros ([tested distros](https://github.com/bayasdev/envycontrol/wiki/Frequently-Asked-Questions#tested-distros))
+- 🖥️ Supports GDM, SDDM and LightDM display managers ([manual setup instructions](https://github.com/bayasdev/envycontrol/wiki/Frequently-Asked-Questions#what-to-do-if-my-display-manager-is-not-supported) also available)
+- 🔋 Save battery with integrated graphics mode
+- 💻 PCI-Express Runtime D3 (RTD3) Power Management support for Turing and later
+- 🎮 Coolbits support for GPU overclocking
+- 🔥 Fix screen tearing with ForceCompositionPipeline
 
-**If you're using Ubuntu or its derivatives please follow [these instructions](https://github.com/bayasdev/envycontrol/wiki/Frequently-Asked-Questions#instructions-for-ubuntu-and-its-derivatives).**
+## 📖 Graphics modes
 
-### 🖥️ Supported display managers 
+### Integrated
 
-- GDM
-- SDDM
-- LightDM
+- The integrated Intel or AMD iGPU is used exclusively
+- Nvidia dGPU is turned off to reduce power consumption
+- External screens cannot be used if the video ports are wired to the dGPU
 
-If your display manager isn't currently supported by EnvyControl you might have to [manually configure it](https://github.com/bayasdev/envycontrol/wiki/Frequently-Asked-Questions#what-to-do-if-my-display-manager-is-not-supported).
+### Hybrid
 
-## 💡 Tips
+- Enables PRIME render offloading
+- RTD3 allows the dGPU to be dynamically turned off when it's not used
+  - Available choices for the `--rtd3` flag (based on the [official documentation](http://us.download.nvidia.com/XFree86/Linux-x86_64/530.30.02/README/dynamicpowermanagement.html))
+    - `0` disabled
+    - `1` coarse-grained
+    - `2` fine-grained
+    - `3` fine-grained for Ampere and later
+  - Only works in Turing and later
+- Performance on external screens might be reduced
 
-### Wayland session is missing on Gnome 43+
+### Nvidia
 
-Latest changes in GDM now require `NVreg_PreserveVideoMemoryAllocations` kernel parameter to be set to 1 as well as `nvidia-suspend` services to be enabled for Wayland sessions to appear.
-
-```
-# 1. Re-run EnvyControl 2.2+ (either nvidia or hybrid mode)
-sudo envycontrol -s nvidia
-
-# 2. Now enable the required Nvidia services
-sudo systemctl enable nvidia-{suspend,resume,hibernate}
-
-# 3. Reboot
-```
-
-### `/usr/share/sddm/scripts/Xsetup` is missing on my system
-
-Please run `sudo envycontrol --reset-sddm`.
-
-## ⬇️ Getting EnvyControl
-
-### Arch Linux ([AUR](https://aur.archlinux.org/packages/envycontrol))
-1. `yay -S envycontrol`.
-2. Run `sudo envycontrol -s <MODE>` to switch graphics modes.
-
-### From source
-
-1. Clone this repository with `git clone https://github.com/bayasdev/envycontrol.git` or download the latest tarball from the releases page.
-2. Run `sudo python envycontrol.py -s <MODE>` from the root of the repository to switch to a different graphics mode. 
- 
-### Install globally as a pip package
-
-- From the root of the cloned repository run `sudo pip install .`
-- Now you can run `sudo envycontrol -s <MODE>` from any directory to switch graphics modes.
+- The Nvidia dGPU is used exclusively
+- Higher graphical performance and higher power consumption
+- Recommended when working with external screens
+  - If facing screen tearing enable ForceCompositionPipeline with the `--force-comp` flag
+- Allows overlocking (not recommended) with the `--coolbits` flag
+  - The default value is `28` bits however it can be manually adjusted according to this [guide](https://wiki.archlinux.org/title/NVIDIA/Tips_and_tricks#Overclocking_and_cooling)
+- Wayland sessions default to hybrid mode
 
 ## ⚡️ Usage
 
 ```
-usage: envycontrol.py [-h] [-v] [-s MODE] [-q] [--dm DISPLAY_MANAGER] [--reset] [--reset-sddm]
+usage: envycontrol.py [-h] [-v] [-q] [-s MODE] [--dm DISPLAY_MANAGER] [--force-comp] [--coolbits [VALUE]] [--rtd3 [VALUE]] [--reset-sddm] [--reset] [--verbose]
 
 options:
   -h, --help            show this help message and exit
-  -v, --version         show this program's version number and exit
+  -v, --version         Output the current version
+  -q, --query           Query the current graphics mode
   -s MODE, --switch MODE
-                        switch the graphics mode, supported modes: integrated, hybrid, nvidia
-  -q, --query           query the current graphics mode set by EnvyControl
-  --dm DISPLAY_MANAGER  Manually specify your Display Manager. This is required only for systems without systemd.
-                        Supported DMs: gdm, sddm, lightdm
-  --reset               remove EnvyControl settings
-  --reset-sddm          restore original SDDM Xsetup file
+                        Switch the graphics mode. Available choices: integrated, hybrid, nvidia
+  --dm DISPLAY_MANAGER  Manually specify your Display Manager for Nvidia mode. Available choices: gdm, gdm3, sddm, lightdm
+  --force-comp          Enable ForceCompositionPipeline on Nvidia mode
+  --coolbits [VALUE]    Enable Coolbits on Nvidia mode. Default if specified: 28
+  --rtd3 [VALUE]        Setup PCI-Express Runtime D3 (RTD3) Power Management on Hybrid mode. Available choices: 0, 1, 2, 3. Default if specified: 2
+  --reset-sddm          Restore default Xsetup file
+  --reset               Revert changes made by EnvyControl
+  --verbose             Enable verbose mode
 ```
 
-**Read a detailed explanation about EnvyControl graphics modes [here](https://github.com/bayasdev/envycontrol/wiki/Frequently-Asked-Questions#graphics-modes-explained).**
+### Some examples
 
-### Usage examples
-
-Set current graphics mode to `integrated` (power off the Nvidia dGPU):
+Set graphics mode to integrated:
 
 ```
 sudo envycontrol -s integrated
 ```
 
-Set current graphics mode to `nvidia` (automatic display manager setup)
+Set graphics mode to hybrid and enable coarse-grained power control:
 
 ```
-sudo envycontrol -s nvidia
+sudo envycontrol -s hybrid --rtd3
 ```
 
-Set current graphics mode to `nvidia` and setup `SDDM` display manager
+Set graphics mode to nvidia, enable ForceCompositionPipeline and Coolbits with a value of 24:
 
 ```
-sudo envycontrol -s nvidia --dm sddm
+sudo envycontrol -s nvidia --force-comp --coolbits 24
+```
+
+Set current graphics mode to nvidia and specify to setup LightDM display manager
+
+```
+sudo envycontrol -s nvidia --dm lightdm
 ```
 
 Query the current graphics mode:
@@ -114,6 +113,31 @@ Query the current graphics mode:
 ```
 envycontrol --query
 ```
+
+Revert all changes made by EnvyControl:
+
+```
+sudo envycontrol --reset
+```
+
+## ⬇️ Getting EnvyControl
+
+### Arch Linux ([AUR](https://aur.archlinux.org/packages/envycontrol))
+
+1. `yay -S envycontrol`
+2. Run `sudo envycontrol -s <MODE>` to switch graphics modes
+
+### From source
+
+1. Clone this repository with `git clone https://github.com/bayasdev/envycontrol.git` or download the latest tarball from the releases page
+2. Run the script from the root of the repository like this `python envycontrol.py -s <MODE>`
+
+💡 Replace `python` with `python3` on Ubuntu/Debian
+
+### Install globally as a pip package
+
+- From the root of the cloned repository run `sudo pip install .`
+- Now you can run `sudo envycontrol -s <MODE>` from any directory to switch graphics modes.
 
 ## 📦 Gnome Extension
 
@@ -123,25 +147,31 @@ The [GPU profile selector](https://github.com/LorenzoMorelli/GPU_profile_selecto
 
 ![gpu profile selector screenshot](https://github.com/LorenzoMorelli/GPU_profile_selector/raw/main/img/extension_screenshot.png)
 
+## 💡 Tips
+
+### Wayland session is missing on Gnome 43+
+
+Latest changes in GDM now require `NVreg_PreserveVideoMemoryAllocations` kernel parameter to be set to 1 as well as `nvidia-suspend` services to be enabled for Wayland sessions to appear.
+
+```
+sudo systemctl enable nvidia-{suspend,resume,hibernate}
+```
+
+### `/usr/share/sddm/scripts/Xsetup` is missing on my system
+
+Please run `sudo envycontrol --reset-sddm`.
+
 ## ❓ Frequently Asked Questions (FAQ)
 
-- [See here](https://github.com/bayasdev/envycontrol/wiki/Frequently-Asked-Questions).
-
-- Also read [fixes for some common problems](https://github.com/DaVikingMan/EnvyControl/wiki/Fixes-for-some-common-problems)
-
-## 📝 Roadmap for v3
-
-- [ ] Make customizable options available as switches (eg: RTD3, composition pipeline, etc).
-- [ ] Nvidia mode on Wayland (Nvidia needs to fix their Linux drivers first).
-- [ ] Plasma applet.
-- [ ] COPR package.
+[Read here](https://github.com/bayasdev/envycontrol/wiki/Frequently-Asked-Questions)
 
 ## 🐞 I found a bug
 
 Feel free to open an issue, don't forget to provide some basic info such as:
 
 - Linux distribution
-- Linux kernel version and type
+- Linux kernel version
 - Desktop Environment or Window Manager as well as your Display Manager
 - Nvidia driver version
 - EnvyControl version
+- EnvyControl output with the `--verbose` flag
