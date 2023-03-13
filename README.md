@@ -43,11 +43,11 @@ Keep it mind any custom X.org configuration may get deleted or overwritten when 
 ### Hybrid
 
 - Enables PRIME render offloading
-- RTD3 allows the dGPU to be dynamically turned off when it's not used
+- RTD3 allows the dGPU to be dynamically turned off when not in use
   - Available choices for the `--rtd3` flag (based on the [official documentation](http://us.download.nvidia.com/XFree86/Linux-x86_64/530.30.02/README/dynamicpowermanagement.html))
     - `0` disabled
     - `1` coarse-grained
-    - `2` fine-grained
+    - `2` fine-grained (default value if you don't provide one)
     - `3` fine-grained for Ampere and later
   - Only works in Turing and later
 - Performance on external screens might be reduced
@@ -90,7 +90,7 @@ Set graphics mode to integrated:
 sudo envycontrol -s integrated
 ```
 
-Set graphics mode to hybrid and enable coarse-grained power control:
+Set graphics mode to hybrid and enable fine-grained power control:
 
 ```
 sudo envycontrol -s hybrid --rtd3
@@ -151,27 +151,27 @@ The [GPU profile selector](https://github.com/LorenzoMorelli/GPU_profile_selecto
 
 ### Wayland session is missing on Gnome 43+
 
-Latest changes in GDM now require `NVreg_PreserveVideoMemoryAllocations` kernel parameter to be set to 1 as well as `nvidia-suspend` services to be enabled for Wayland sessions to appear.
+GDM now requires `NVreg_PreserveVideoMemoryAllocations` kernel parameter which is set automatically by EnvyControl however you might need to enable the `nvidia-suspend` services:
 
 ```
 sudo systemctl enable nvidia-{suspend,resume,hibernate}
 ```
 
-### `/usr/share/sddm/scripts/Xsetup` is missing on my system
+### The `/usr/share/sddm/scripts/Xsetup` file is missing on my system
 
-Please run `sudo envycontrol --reset-sddm`.
+If this ever happens please run `sudo envycontrol --reset-sddm`.
 
 ## ❓ Frequently Asked Questions (FAQ)
 
 [Read here](https://github.com/bayasdev/envycontrol/wiki/Frequently-Asked-Questions)
 
-## 🐞 I found a bug
+## 🐞 I have a problem
 
-Feel free to open an issue, don't forget to provide some basic info such as:
+Please open an issue, **don't forget to specify**:
 
-- Linux distribution
-- Linux kernel version
-- Desktop Environment or Window Manager as well as your Display Manager
-- Nvidia driver version
-- EnvyControl version
-- EnvyControl output with the `--verbose` flag
+- Your laptop model (eg: Acer Predator G3-571)
+- What distribution you're using and current Linux kernel version (eg: Ubuntu 22.04.2 LTS with kernel 5.19)
+- Desktop Environment or Window Manager as well as your Display Manager (eg: Xfce with LightDM)
+- Propietary Nvidia driver version (eg: 530.30.02) **latest is not a valid answer**
+- `lspci` command output **(EnvyControl relies on it for hardware detection and I can't narrow down the problem without it)**
+- Try to reproduce your problem with the `--verbose` flag **(its output is really helpful for me)**
