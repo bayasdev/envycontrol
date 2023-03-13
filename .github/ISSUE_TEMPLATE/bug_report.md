@@ -1,14 +1,14 @@
 ---
 name: Bug report
-about: Create a report to help us fix a problem
+about: Report a problem you have encountered while using EnvyControl
 title: "[BUG]"
 labels: bug
 assignees: ''
 
 ---
 
-**Describe the problem**
-A clear and concise description of what the problem is.
+**Describe the bug**
+A clear and concise description of what the bug is.
 
 **To Reproduce**
 Steps to reproduce the behavior:
