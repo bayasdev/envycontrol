@@ -329,7 +329,7 @@ def get_nvidia_gpu_pci_bus():
 def get_igpu_vendor():
     lspci_output = subprocess.check_output(["lspci"]).decode('utf-8')
     for line in lspci_output.splitlines():
-        if 'VGA compatible controller' in line:
+        if 'VGA compatible controller' in line or 'Display controller' in line:
             if 'Intel' in line:
                 logging.info("Found Intel iGPU")
                 return 'intel'
