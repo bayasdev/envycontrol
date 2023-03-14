@@ -397,12 +397,9 @@ def rebuild_initramfs():
     # RHEL and SUSE derivatives
     elif os.path.exists('/etc/redhat-release') or os.path.exists('/usr/bin/zypper'):
         command = ['dracut', '--force', '--regenerate-all']
-    # EndeavourOS
-    elif os.path.exists('/usr/lib/endeavouros-release'):
-        if os.path.exists('/usr/bin/dracut'):
-            command = ['dracut-rebuild']
-        else:
-            command = ['mkinitcpio', '-P']
+    # EndeavourOS with dracut
+    elif os.path.exists('/usr/lib/endeavouros-release') and os.path.exists('/usr/bin/dracut'):
+        command = ['dracut-rebuild']
     else:
         command = []
 
