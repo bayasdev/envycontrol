@@ -336,9 +336,8 @@ def get_igpu_vendor():
             elif 'ATI' in line or 'AMD' in line or 'AMD/ATI' in line:
                 logging.info("Found AMD iGPU")
                 return 'amd'
-            else:
-                logging.warning("Could not find Intel or AMD iGPU")
-                return None
+    logging.warning("Could not find Intel or AMD iGPU")
+    return None
 
 
 def get_display_manager():
