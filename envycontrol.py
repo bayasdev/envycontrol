@@ -8,7 +8,7 @@ import logging
 
 # begin constants definition
 
-VERSION = '3.0.1'
+VERSION = '3.0.0'
 
 BLACKLIST_PATH = '/etc/modprobe.d/blacklist-nvidia.conf'
 
@@ -309,7 +309,7 @@ def cleanup():
 def get_nvidia_gpu_pci_bus():
     lspci_output = subprocess.check_output(['lspci']).decode('utf-8')
     for line in lspci_output.splitlines():
-        if 'NVIDIA' in line and ('VGA compatible controller' or '3D controller' in line):
+        if 'NVIDIA' in line and ('VGA compatible controller' in line or '3D controller' in line):
             # remove leading zeros
             pci_bus_id = line.split()[0].replace("0000:", "")
             logging.info(f"Found Nvidia GPU at {pci_bus_id}")
@@ -329,11 +329,11 @@ def get_nvidia_gpu_pci_bus():
 def get_igpu_vendor():
     lspci_output = subprocess.check_output(["lspci"]).decode('utf-8')
     for line in lspci_output.splitlines():
-        if 'VGA compatible controller' or 'Display controller' in line:
+        if 'VGA compatible controller' in line:
             if 'Intel' in line:
                 logging.info("Found Intel iGPU")
                 return 'intel'
-            elif 'AMD' or 'ATI' in line:
+            elif 'ATI' in line or 'AMD' in line or 'AMD/ATI' in line:
                 logging.info("Found AMD iGPU")
                 return 'amd'
             else:
