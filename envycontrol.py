@@ -399,7 +399,7 @@ def rebuild_initramfs():
         command = ['dracut', '--force', '--regenerate-all']
     # EndeavourOS with dracut
     elif os.path.exists('/usr/lib/endeavouros-release') and os.path.exists('/usr/bin/dracut'):
-        command = ['dracut', '--force', '--regenerate-all']
+        command = ['dracut-rebuild']
     else:
         command = []
 
