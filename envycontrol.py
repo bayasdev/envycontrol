@@ -8,7 +8,7 @@ import logging
 
 # begin constants definition
 
-VERSION = '3.0.2'
+VERSION = '3.0.3'
 
 BLACKLIST_PATH = '/etc/modprobe.d/blacklist-nvidia.conf'
 
