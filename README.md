@@ -127,6 +127,14 @@ sudo envycontrol --reset
 1. `yay -S envycontrol`
 2. Run `sudo envycontrol -s <MODE>` to switch graphics modes
 
+### Fedora
+
+Use the [COPR](https://copr.fedorainfracloud.org/coprs/sunwire/envycontrol/) maintained by [@sunwire](https://github.com/sunwire)
+
+1. Enable the repository with `sudo dnf copr enable sunwire/envycontrol`
+2. `sudo dnf install python3-envycontrol`
+3. Run `sudo envycontrol -s <MODE>` to switch graphics modes
+
 ### From source
 
 1. Clone this repository with `git clone https://github.com/bayasdev/envycontrol.git` or download the latest tarball from the releases page
