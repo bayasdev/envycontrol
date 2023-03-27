@@ -135,10 +135,19 @@ Use the [COPR](https://copr.fedorainfracloud.org/coprs/sunwire/envycontrol/) mai
 2. `sudo dnf install python3-envycontrol`
 3. Run `sudo envycontrol -s <MODE>` to switch graphics modes
 
+### Ubuntu / Debian
+
+Since [PEP668 adoption](https://www.linuxuprising.com/2023/03/next-debianubuntu-releases-will-likely.html) is no longer possible to install pip packages outside a virtual environment, instead use the provided deb package:
+
+1. Go to the [latest release page](https://github.com/bayasdev/envycontrol/releases/latest)
+2. Download the attached `python3-envycontrol_version.deb` package
+2. Install it with `sudo apt -y install ./python3-envycontrol_version.deb`
+3. Run `sudo envycontrol -s <MODE>` to switch graphics modes
+
 ### From source
 
 1. Clone this repository with `git clone https://github.com/bayasdev/envycontrol.git` or download the latest tarball from the releases page
-2. Run the script from the root of the repository like this `python envycontrol.py -s <MODE>`
+2. Run the script from the root of the repository like this `python ./envycontrol.py -s <MODE>`
 
 💡 Replace `python` with `python3` on Ubuntu/Debian
 
