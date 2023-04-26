@@ -20,7 +20,7 @@ EnvyControl is free and open-source software released under the [MIT](https://gi
 
 **This software is provided 'as-is' without any express or implied warranty.**
 
-Keep it mind any custom X.org configuration may get deleted or overwritten when switching modes.
+Keep in mind any custom X.org configuration may get deleted or overwritten when switching modes.
 
 ## ✨ Features
 
