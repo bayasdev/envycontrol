@@ -156,13 +156,21 @@ Since [PEP668 adoption](https://www.linuxuprising.com/2023/03/next-debianubuntu-
 - From the root of the cloned repository run `sudo pip install .`
 - Now you can run `sudo envycontrol -s <MODE>` from any directory to switch graphics modes.
 
-## 📦 Gnome Extension
+## 👕 GUIs
+
+### Gnome Extension
 
 The [GPU profile selector](https://github.com/LorenzoMorelli/GPU_profile_selector) extension provides a simple way to switch between graphics modes in a few clicks, you can get it from [here](https://extensions.gnome.org/extension/5009/gpu-profile-selector/).
 
 **Make sure to have EnvyControl installed globally!**
 
 ![gpu profile selector screenshot](https://github.com/LorenzoMorelli/GPU_profile_selector/raw/main/img/extension_screenshot.png)
+
+### KDE Widget
+
+[Optimus GPU Switcher](https://github.com/enielrodriguez/optimus-gpu-switcher) allows you to change the GPU mode easily, plus its icon is dynamic and serves as an indicator of the current mode.
+
+![Screenshot_20230703_153738](https://github.com/enielrodriguez/optimus-gpu-switcher/assets/31964610/ace0c67e-9428-49fd-895c-48a236727898)
 
 ## 💡 Tips
 
