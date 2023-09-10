@@ -8,7 +8,7 @@ import logging
 
 # begin constants definition
 
-VERSION = '3.2.0'
+VERSION = '3.3.0'
 
 BLACKLIST_PATH = '/etc/modprobe.d/blacklist-nvidia.conf'
 
@@ -194,7 +194,14 @@ def graphics_mode_switcher(graphics_mode, user_display_manager, enable_force_com
 
     if graphics_mode == 'integrated':
 
-        subprocess.run(["systemctl", "disable", "nvidia-persistenced.service"])
+        if logging.getLogger().level == logging.DEBUG:
+            service = subprocess.run(["systemctl", "disable", "nvidia-persistenced.service"])
+        else:
+            service = subprocess.run(["systemctl", "disable", "nvidia-persistenced.service"],stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if service.returncode == 0:
+            print('Successfully disabled nvidia-persistenced.service')
+        else:
+            logging.error("An error ocurred while disabling service")
 
         cleanup()
 
@@ -210,7 +217,14 @@ def graphics_mode_switcher(graphics_mode, user_display_manager, enable_force_com
             f"Enable PCI-Express Runtime D3 (RTD3) Power Management: {rtd3_value or False}")
         cleanup()
 
-        subprocess.run(["systemctl", "enable", "nvidia-persistenced.service"])
+        if logging.getLogger().level == logging.DEBUG:
+            service = subprocess.run(["systemctl", "enable", "nvidia-persistenced.service"])
+        else:
+            service = subprocess.run(["systemctl", "enable", "nvidia-persistenced.service"],stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if service.returncode == 0:
+            print('Successfully enabled nvidia-persistenced.service')
+        else:
+            logging.error("An error ocurred while enabling service")
 
         if rtd3_value == None:
             create_file(MODESET_PATH, MODESET_CONTENT)
@@ -224,7 +238,14 @@ def graphics_mode_switcher(graphics_mode, user_display_manager, enable_force_com
         print(f"Enable ForceCompositionPipeline: {enable_force_comp}")
         print(f"Enable Coolbits: {coolbits_value or False}")
 
-        subprocess.run(["systemctl", "disable", "nvidia-persistenced.service"])
+        if logging.getLogger().level == logging.DEBUG:
+            service = subprocess.run(["systemctl", "enable", "nvidia-persistenced.service"])
+        else:
+            service = subprocess.run(["systemctl", "enable", "nvidia-persistenced.service"],stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if service.returncode == 0:
+            print('Successfully enabled nvidia-persistenced.service')
+        else:
+            logging.error("An error ocurred while enabling service")
 
         cleanup()
         # get the Nvidia dGPU PCI bus
