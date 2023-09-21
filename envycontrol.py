@@ -205,10 +205,10 @@ def graphics_mode_switcher(graphics_mode, user_display_manager, enable_force_com
 
         cleanup()
         
-        systemd_output = subprocess.check_output(["systemctl", "--type=service"]).decode('utf-8')
+        services_list = subprocess.run(["systemctl", "list-unit-files", "nvidia-fallback"], stdout=subprocess.DEVNULL)
 
-        if "nvidia-fallback" in systemd_output:
-            subprocess.run(["systemctl", "disable", "nvidia-fallback.service"])
+        if services_list.returncode == 0:
+            subprocess.run(["systemctl", "disable", "nvidia-fallback.service"],  stdout=subprocess.DEVNULL)
 
         # blacklist all nouveau and Nvidia modules
         create_file(BLACKLIST_PATH, BLACKLIST_CONTENT)
