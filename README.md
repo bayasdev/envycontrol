@@ -176,11 +176,10 @@ The [GPU profile selector](https://github.com/LorenzoMorelli/GPU_profile_selecto
 
 ### Wayland session is missing on Gnome 43+
 
-GDM now requires `NVreg_PreserveVideoMemoryAllocations` kernel parameter which breaks sleep in nvidia and hybrid mode, as well as rtd3 in hybrid mode, so EnvyControl disables it, if you need a Wayland session follow the instructions below
+GDM now requires `NVreg_PreserveVideoMemoryAllocations` kernel parameter which is set automatically by EnvyControl however you might need to enable the `nvidia-suspend` services:
 
 ```
 sudo systemctl enable nvidia-{suspend,resume,hibernate}
-sudo ln -s /dev/null /etc/udev/rules.d/61-gdm.rules
 ```
 
 ### The `/usr/share/sddm/scripts/Xsetup` file is missing on my system
