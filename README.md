@@ -77,6 +77,7 @@ options:
   --force-comp          Enable ForceCompositionPipeline on Nvidia mode
   --coolbits [VALUE]    Enable Coolbits on Nvidia mode. Default if specified: 28
   --rtd3 [VALUE]        Setup PCI-Express Runtime D3 (RTD3) Power Management on Hybrid mode. Available choices: 0, 1, 2, 3. Default if specified: 2
+  --use-nvidia-current  Use nvidia-current instead of nvidia for kernel modules
   --reset-sddm          Restore default Xsetup file
   --reset               Revert changes made by EnvyControl
   --verbose             Enable verbose mode
@@ -141,8 +142,8 @@ Since [PEP668 adoption](https://www.linuxuprising.com/2023/03/next-debianubuntu-
 
 1. Go to the [latest release page](https://github.com/bayasdev/envycontrol/releases/latest)
 2. Download the attached `python3-envycontrol_version.deb` package
-2. Install it with `sudo apt -y install ./python3-envycontrol_version.deb`
-3. Run `sudo envycontrol -s <MODE>` to switch graphics modes
+3. Install it with `sudo apt -y install ./python3-envycontrol_version.deb`
+4. Run `sudo envycontrol -s <MODE>` to switch graphics modes
 
 ### From source
 
@@ -174,6 +175,10 @@ The [GPU profile selector](https://github.com/LorenzoMorelli/GPU_profile_selecto
 
 ## 💡 Tips
 
+### `nvidia` kernel module is named `nvidia-current` on Debian
+
+If you're running into this situation you can use the `--use-nvidia-current` flag to make EnvyControl use the correct module name.
+
 ### Wayland session is missing on Gnome 43+
 
 GDM now requires `NVreg_PreserveVideoMemoryAllocations` kernel parameter which breaks sleep in nvidia and hybrid mode, as well as rtd3 in hybrid mode, so EnvyControl disables it, if you need a Wayland session follow the instructions below
@@ -194,3 +199,7 @@ If this ever happens please run `sudo envycontrol --reset-sddm`.
 ## 🐞 I have a problem
 
 Open an issue and **don't forget to complete all the requested fields!**
+
+## ☕️ Buy me a coffee
+
+[PayPal](https://www.paypal.com/paypalme/bayasdev)
