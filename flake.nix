@@ -1,31 +1,28 @@
 {
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-  inputs.poetry2nix.url = "github:nix-community/poetry2nix";
+  inputs.nix-setuptools.url = "github:seppeljordan/nix-setuptools";
 
-  outputs = { self, nixpkgs, poetry2nix }:
+  outputs = { self, nixpkgs, nix-setuptools }:
     let
-      supportedSystems = [ "x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin" ];
+      supportedSystems = [ "x86_64-linux" ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       pkgs = forAllSystems (system: nixpkgs.legacyPackages.${system});
     in
     {
-      packages = forAllSystems (system: let
-        inherit (poetry2nix.lib.mkPoetry2Nix { pkgs = pkgs.${system}; }) mkPoetryScriptsPackage;
-      in {
-        default = mkPoetryScriptsPackage { 
-          projectDir = self;
-        };
+      packages = forAllSystems (system:
+        with pkgs.${system}.python3Packages; {
+          default = buildPythonPackage rec {
+            name = "envycontrol";
+            version = "3.3.1";
+            src = self;
+          };
       });
 
       devShells = forAllSystems (system: let
-        inherit (poetry2nix.lib.mkPoetry2Nix { pkgs = pkgs.${system}; }) mkPoetryEnv;
       in {
         default = pkgs.${system}.mkShellNoCC {
           packages = with pkgs.${system}; [
-            (mkPoetryEnv { 
-              projectDir = self;
-            })
-            poetry
+            python3
           ];
         };
       });
