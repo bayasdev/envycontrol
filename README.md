@@ -80,6 +80,9 @@ options:
   --use-nvidia-current  Use nvidia-current instead of nvidia for kernel modules
   --reset-sddm          Restore default Xsetup file
   --reset               Revert changes made by EnvyControl
+  --cache-create        Create cache used by EnvyControl; only works in hybrid mode
+  --cache-delete        Delete cache created by EnvyControl
+  --cache-query         Show cache created by EnvyControl
   --verbose             Enable verbose mode
 ```
 
@@ -120,6 +123,70 @@ Revert all changes made by EnvyControl:
 ```
 sudo envycontrol --reset
 ```
+
+### Caching added with 3.4.0
+A cache was added in version 3.4.0. The main purpose is to cache the Nvidia PCI bus ID so that a transition from integrated mode directly to nvidia mode is possible. But more metadata is also captured to assist in troubleshooting.
+
+```python
+CACHE_FILE_PATH = '/var/cache/envycontrol/cache.json'
+```
+
+It accepts all the command options that you would use during a switch operation so the values are logged in the cache file.
+
+```json
+{
+    "switch": {
+        "nvidia_gpu_pci_bus": "PCI:1:0:0"
+    },
+    "metadata": {
+        "audit_iso_tmstmp": "2024-02-23T20:17:38.165421",
+        "args": {
+            "query": false,
+            "switch": "integrated",
+            "dm": null,
+            "force_comp": true,
+            "coolbits": null,
+            "rtd3": null,
+            "use_nvidia_current": true,
+            "reset_sddm": false,
+            "reset": false,
+            "cache_create": false,
+            "cache_delete": false,
+            "cache_query": false,
+            "verbose": false
+        },
+        "amd_igpu_name": null,
+        "current_mode": "hybrid",
+        "display_manager": "gdm",
+        "igpu_pci_bus": "PCI:0:2:0",
+        "igpu_vendor": "intel"
+    }
+}
+```
+
+The cache is automatically re-created whenever a switch from hybrid mode is performed.
+
+#### Caching command line samples
+
+Create cache used by EnvyControl; only works in hybrid mode
+
+```
+sudo envycontrol --cache-create
+```
+
+
+Delete cache created by EnvyControl
+
+```
+sudo envycontrol --cache-delete
+```
+
+Show cache created by EnvyControl
+
+```
+sudo envycontrol --cache-query
+```
+
 
 ## ⬇️ Getting EnvyControl
 

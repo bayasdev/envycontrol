@@ -9,7 +9,7 @@ from contextlib import contextmanager
 
 # begin constants definition
 
-VERSION = '3.3.1'
+VERSION = '3.4.0'
 
 # Note: Do NOT remove this in cleanup!
 CACHE_FILE_PATH = '/var/cache/envycontrol/cache.json'
@@ -220,7 +220,8 @@ def graphics_mode_switcher(graphics_mode, user_display_manager, enable_force_com
     if graphics_mode == 'integrated':
 
         if logging.getLogger().level == logging.DEBUG:
-            service = subprocess.run(["systemctl", "disable", "nvidia-persistenced.service"])
+            service = subprocess.run(
+                ["systemctl", "disable", "nvidia-persistenced.service"])
         else:
             service = subprocess.run(
                 ["systemctl", "disable", "nvidia-persistenced.service"],
@@ -245,7 +246,8 @@ def graphics_mode_switcher(graphics_mode, user_display_manager, enable_force_com
         cleanup()
 
         if logging.getLogger().level == logging.DEBUG:
-            service = subprocess.run(["systemctl", "enable", "nvidia-persistenced.service"])
+            service = subprocess.run(
+                ["systemctl", "enable", "nvidia-persistenced.service"])
         else:
             service = subprocess.run(
                 ["systemctl", "enable", "nvidia-persistenced.service"],
@@ -263,7 +265,8 @@ def graphics_mode_switcher(graphics_mode, user_display_manager, enable_force_com
         else:
             # setup rtd3
             if use_nvidia_current:
-                create_file(MODESET_PATH, MODESET_CURRENT_RTD3.format(rtd3_value))
+                create_file(
+                    MODESET_PATH, MODESET_CURRENT_RTD3.format(rtd3_value))
             else:
                 create_file(MODESET_PATH, MODESET_RTD3.format(rtd3_value))
             create_file(UDEV_PM_PATH, UDEV_PM_CONTENT)
@@ -274,7 +277,8 @@ def graphics_mode_switcher(graphics_mode, user_display_manager, enable_force_com
         print(f"Enable Coolbits: {coolbits_value or False}")
 
         if logging.getLogger().level == logging.DEBUG:
-            service = subprocess.run(["systemctl", "enable", "nvidia-persistenced.service"])
+            service = subprocess.run(
+                ["systemctl", "enable", "nvidia-persistenced.service"])
         else:
             service = subprocess.run(
                 ["systemctl", "enable", "nvidia-persistenced.service"],
@@ -532,9 +536,12 @@ def main():
                         help='Restore default Xsetup file')
     parser.add_argument('--reset', action='store_true',
                         help='Revert changes made by EnvyControl')
-    parser.add_argument('--cache-create', action='store_true', help='Create cache used by EnvyControl; only works in hybrid mode')
-    parser.add_argument('--cache-delete', action='store_true', help='Delete cache created by EnvyControl')
-    parser.add_argument('--cache-query', action='store_true', help='Show cache created by EnvyControl')
+    parser.add_argument('--cache-create', action='store_true',
+                        help='Create cache used by EnvyControl; only works in hybrid mode')
+    parser.add_argument('--cache-delete', action='store_true',
+                        help='Delete cache created by EnvyControl')
+    parser.add_argument('--cache-query', action='store_true',
+                        help='Show cache created by EnvyControl')
     parser.add_argument('--verbose', default=False, action='store_true',
                         help='Enable verbose mode')
 
@@ -581,6 +588,7 @@ def main():
             assert_root()
             cleanup()
             CachedConfig.delete_cache_file()
+            rebuild_initramfs()
             print('Operation completed successfully')
 
 
@@ -609,7 +617,8 @@ class CachedConfig:
 
     def create_cache_file(self):
         if not self.is_hybrid():
-            raise ValueError('--cache-create requires that the system be in the hybrid Optimus mode')
+            raise ValueError(
+                '--cache-create requires that the system be in the hybrid Optimus mode')
 
         self.nvidia_gpu_pci_bus = get_nvidia_gpu_pci_bus()
         self.obj = self.create_cache_obj(self.nvidia_gpu_pci_bus)
@@ -656,7 +665,8 @@ class CachedConfig:
         elif self.is_hybrid():
             self.nvidia_gpu_pci_bus = get_nvidia_gpu_pci_bus()
         else:
-            raise ValueError('No cache present.Operation requires that the system be in the hybrid Optimus mode')
+            raise ValueError(
+                'No cache present.Operation requires that the system be in the hybrid Optimus mode')
 
     def show_cache_file(self):
         content = f'ERROR: Could not read {CACHE_FILE_PATH}'
@@ -700,7 +710,8 @@ def get_igpu_bus_pci_bus():
 
 def get_lspci_lines():
     lspci_output = subprocess.check_output(["lspci"]).decode('utf-8')
-    lines = [line for line in lspci_output.splitlines() if 'VGA compatible controller' in line or 'Display controller' in line]
+    lines = [line for line in lspci_output.splitlines(
+    ) if 'VGA compatible controller' in line or 'Display controller' in line]
     return lines
 
 
