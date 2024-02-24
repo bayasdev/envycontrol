@@ -1,8 +1,7 @@
 {
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-  inputs.nix-setuptools.url = "github:seppeljordan/nix-setuptools";
 
-  outputs = { self, nixpkgs, nix-setuptools }:
+  outputs = { self, nixpkgs }:
     let
       supportedSystems = [ "x86_64-linux" ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;

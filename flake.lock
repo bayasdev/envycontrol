@@ -1,69 +1,6 @@
 {
   "nodes": {
-    "flake-utils": {
-      "locked": {
-        "lastModified": 1618868421,
-        "narHash": "sha256-vyoJhLV6cJ8/tWz+l9HZLIkb9Rd9esE7p+0RL6zDR6Y=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "eed214942bcfb3a8cc09eb3b28ca7d7221e44a94",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
-    "nix-parsec": {
-      "locked": {
-        "lastModified": 1614150306,
-        "narHash": "sha256-h5fZgIhwvekg5WTNDdrV5EJ4zxXvlSqITmPVuz/OM+w=",
-        "owner": "nprindle",
-        "repo": "nix-parsec",
-        "rev": "a28e73fce98227cc46edfdbb8518697c0982e034",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nprindle",
-        "repo": "nix-parsec",
-        "type": "github"
-      }
-    },
-    "nix-setuptools": {
-      "inputs": {
-        "flake-utils": "flake-utils",
-        "nix-parsec": "nix-parsec",
-        "nixpkgs": "nixpkgs"
-      },
-      "locked": {
-        "lastModified": 1619202009,
-        "narHash": "sha256-G5Zu+is37oV8KIpwXSFzgQoOTano5u/0goINAtsLidg=",
-        "owner": "seppeljordan",
-        "repo": "nix-setuptools",
-        "rev": "099bba8924f5773744c793fc9e74f47506b5c8af",
-        "type": "github"
-      },
-      "original": {
-        "owner": "seppeljordan",
-        "repo": "nix-setuptools",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
-      "locked": {
-        "lastModified": 1618343055,
-        "narHash": "sha256-yux3woyNtMt6ynYRq7+DYe19CC+SoI/LJW+zSJd0UOs=",
-        "path": "/nix/store/y2w8z0vr1cq7ns07mla22x5c7d7mvcqz-source",
-        "rev": "e019872af81e4013fd518fcacfba74b1de21a50e",
-        "type": "path"
-      },
-      "original": {
-        "id": "nixpkgs",
-        "type": "indirect"
-      }
-    },
-    "nixpkgs_2": {
       "locked": {
         "lastModified": 1708751719,
         "narHash": "sha256-0uWOKSpXJXmXswOvDM5Vk3blB74apFB6rNGWV5IjoN0=",
@@ -81,8 +18,7 @@
     },
     "root": {
       "inputs": {
-        "nix-setuptools": "nix-setuptools",
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs"
       }
     }
   },
