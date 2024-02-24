@@ -558,6 +558,7 @@ def main():
     elif args.reset:
         assert_root()
         cleanup()
+        rebuild_initramfs()
         print('Operation completed successfully')
 
 
