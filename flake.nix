@@ -17,11 +17,16 @@
           };
       });
 
+      buildInputs = forAllSystems (system:
+        with pkgs.${system}; [ pciutils ]
+      );
+
       devShells = forAllSystems (system: let
       in {
         default = pkgs.${system}.mkShellNoCC {
           packages = with pkgs.${system}; [
-            python3
+            (python3.withPackages(ps: with ps; [ setuptools ]))
+            pciutils
           ];
         };
       });
