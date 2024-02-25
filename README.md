@@ -150,20 +150,27 @@ Since [PEP668 adoption](https://www.linuxuprising.com/2023/03/next-debianubuntu-
 If you're using Nix Flakes:
 
 - Script could be executed using this command:
+
 ```sh
-nix run github:ITesserakt/envycontrol -- <args>
+nix run github:bayasdev/envycontrol -- <args>
 ```
+
 - For system-wide installation, add this flake to inputs in your configuration:
+
 ```sh
 inputs = {
   # ...
-  envycontrol.url = github:ITesserakt/envycontrol
+  envycontrol.url = github:bayasdev/envycontrol
 };
 ```
+
 And mention it in the packages like this:
+
 ```sh
 envycontrol.packages.x86_64-linux.default
 ```
+
+Thanks to [@ITesserakt](https://github.com/ITesserakt) for adding initial NixOS support!
 
 ### From source
 
