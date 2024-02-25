@@ -145,6 +145,26 @@ Since [PEP668 adoption](https://www.linuxuprising.com/2023/03/next-debianubuntu-
 3. Install it with `sudo apt -y install ./python3-envycontrol_version.deb`
 4. Run `sudo envycontrol -s <MODE>` to switch graphics modes
 
+### Nixos
+
+If you're using Nix Flakes:
+
+- Script could be executed using this command:
+```sh
+nix run github:ITesserakt/envycontrol -- <args>
+```
+- For system-wide installation, add this flake to inputs in your configuration:
+```sh
+inputs = {
+  # ...
+  envycontrol.url = github:ITesserakt/envycontrol
+};
+```
+And mention it in the packages like this:
+```sh
+envycontrol.packages.x86_64-linux.default
+```
+
 ### From source
 
 1. Clone this repository with `git clone https://github.com/bayasdev/envycontrol.git` or download the latest tarball from the releases page
