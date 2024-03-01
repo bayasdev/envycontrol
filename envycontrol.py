@@ -572,24 +572,27 @@ def main():
         CachedConfig.delete_cache_file()
         return
     elif args.cache_query:
-        CachedConfig(args).show_cache_file()
+        CachedConfig.show_cache_file()
         return
 
-    with CachedConfig(args).adapter():
-        if args.switch:
-            assert_root()
-            graphics_mode_switcher(args.switch, args.dm,
-                                   args.force_comp, args.coolbits, args.rtd3, args.use_nvidia_current)
-        elif args.reset_sddm:
-            assert_root()
-            create_file(SDDM_XSETUP_PATH, SDDM_XSETUP_CONTENT, True)
-            print('Operation completed successfully')
-        elif args.reset:
-            assert_root()
-            cleanup()
-            CachedConfig.delete_cache_file()
-            rebuild_initramfs()
-            print('Operation completed successfully')
+    if args.switch or args.reset_sddm or args.reset:
+        with CachedConfig(args).adapter():
+            if args.switch:
+                assert_root()
+                graphics_mode_switcher(
+                    args.switch, args.dm,
+                    args.force_comp, args.coolbits, args.rtd3, args.use_nvidia_current
+                )
+            elif args.reset_sddm:
+                assert_root()
+                create_file(SDDM_XSETUP_PATH, SDDM_XSETUP_CONTENT, True)
+                print('Operation completed successfully')
+            elif args.reset:
+                assert_root()
+                cleanup()
+                CachedConfig.delete_cache_file()
+                rebuild_initramfs()
+                print('Operation completed successfully')
 
 
 class CachedConfig:
@@ -668,7 +671,8 @@ class CachedConfig:
             raise ValueError(
                 'No cache present.Operation requires that the system be in the hybrid Optimus mode')
 
-    def show_cache_file(self):
+    @staticmethod
+    def show_cache_file():
         content = f'ERROR: Could not read {CACHE_FILE_PATH}'
         if os.path.exists(CACHE_FILE_PATH):
             with open(CACHE_FILE_PATH, 'r', encoding='utf-8') as f:
@@ -681,6 +685,9 @@ class CachedConfig:
 
         with open(CACHE_FILE_PATH, 'w', encoding='utf-8') as f:
             dump(self.obj, fp=f, indent=4, sort_keys=False)
+
+        if logging.getLogger().level == logging.DEBUG:
+            print(f'INFO: created {CACHE_FILE_PATH}')
 
 
 def get_current_mode():
