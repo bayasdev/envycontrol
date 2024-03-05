@@ -628,20 +628,10 @@ class CachedConfig:
         self.write_cache_file()
 
     def create_cache_obj(self, nvidia_gpu_pci_bus):
-        from datetime import datetime
         return {
             'switch': {
                 'nvidia_gpu_pci_bus': nvidia_gpu_pci_bus
             },
-            'metadata': {
-                'audit_iso_tmstmp': datetime.now().isoformat(),
-                'args': vars(self.app_args),
-                'amd_igpu_name': get_amd_igpu_name(),
-                'current_mode': self.current_mode,
-                'display_manager': get_display_manager(),
-                'igpu_pci_bus': get_igpu_bus_pci_bus(),
-                'igpu_vendor': get_igpu_vendor(),
-            }
         }
 
     def is_hybrid(self):
@@ -649,9 +639,6 @@ class CachedConfig:
 
     def get_nvidia_gpu_pci_bus(self):
         return self.nvidia_gpu_pci_bus
-
-    def get_metadata(self):
-        return self.obj['metadata']
 
     @staticmethod
     def delete_cache_file():
@@ -669,7 +656,7 @@ class CachedConfig:
             self.nvidia_gpu_pci_bus = get_nvidia_gpu_pci_bus()
         else:
             raise ValueError(
-                'No cache present.Operation requires that the system be in the hybrid Optimus mode')
+                'No cache present. Operation requires that the system be in the hybrid Optimus mode')
 
     @staticmethod
     def show_cache_file():
@@ -697,29 +684,6 @@ def get_current_mode():
     elif os.path.exists(XORG_PATH) and os.path.exists(MODESET_PATH):
         mode = 'nvidia'
     return mode
-
-
-def get_igpu_bus_pci_bus():
-    lines = get_lspci_lines()
-    rc = None
-    for line in lines:
-        if 'Intel' in line:
-            pci_bus_id = line.split()[0].replace("0000:", "")
-
-            # need to return the BusID in 'PCI:bus:device:function' format
-            # also perform hexadecimal to decimal conversion
-            bus, device_function = pci_bus_id.split(":")
-            device, function = device_function.split(".")
-
-            rc = f"PCI:{int(bus, 16)}:{int(device, 16)}:{int(function, 16)}"
-    return rc
-
-
-def get_lspci_lines():
-    lspci_output = subprocess.check_output(["lspci"]).decode('utf-8')
-    lines = [line for line in lspci_output.splitlines(
-    ) if 'VGA compatible controller' in line or 'Display controller' in line]
-    return lines
 
 
 if __name__ == '__main__':
