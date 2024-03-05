@@ -137,9 +137,7 @@ CACHE_FILE_PATH = '/var/cache/envycontrol/cache.json'
 
 ```json
 {
-    "switch": {
-        "nvidia_gpu_pci_bus": "PCI:1:0:0"
-    }
+  "nvidia_gpu_pci_bus": "PCI:1:0:0"
 }
 ```
 

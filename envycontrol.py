@@ -607,14 +607,14 @@ class CachedConfig:
         global get_nvidia_gpu_pci_bus
         use_cache = os.path.exists(CACHE_FILE_PATH)
 
+        if self.is_hybrid():  # recreate cache file when in hybrid mode
+            self.create_cache_file()
+
         if use_cache:
             self.read_cache_file()  # might not be in hybrid mode
 
             # rebind function to use cached value instead of detection
             get_nvidia_gpu_pci_bus = self.get_nvidia_gpu_pci_bus
-
-        if self.is_hybrid():  # recreate cache file when in hybrid mode
-            self.create_cache_file()
 
         yield  # back to main ...
 
@@ -629,9 +629,7 @@ class CachedConfig:
 
     def create_cache_obj(self, nvidia_gpu_pci_bus):
         return {
-            'switch': {
-                'nvidia_gpu_pci_bus': nvidia_gpu_pci_bus
-            },
+            'nvidia_gpu_pci_bus': nvidia_gpu_pci_bus
         }
 
     def is_hybrid(self):
@@ -644,6 +642,7 @@ class CachedConfig:
     def delete_cache_file():
         os.remove(CACHE_FILE_PATH)
         os.removedirs(os.path.dirname(CACHE_FILE_PATH))
+        logging.debug(f"Removed file {CACHE_FILE_PATH}")
 
     def read_cache_file(self):
         from json import loads
@@ -651,7 +650,7 @@ class CachedConfig:
             with open(CACHE_FILE_PATH, 'r', encoding='utf-8') as f:
                 content = f.read()
             self.obj = loads(content)
-            self.nvidia_gpu_pci_bus = self.obj['switch']['nvidia_gpu_pci_bus']
+            self.nvidia_gpu_pci_bus = self.obj['nvidia_gpu_pci_bus']
         elif self.is_hybrid():
             self.nvidia_gpu_pci_bus = get_nvidia_gpu_pci_bus()
         else:
@@ -673,8 +672,7 @@ class CachedConfig:
         with open(CACHE_FILE_PATH, 'w', encoding='utf-8') as f:
             dump(self.obj, fp=f, indent=4, sort_keys=False)
 
-        if logging.getLogger().level == logging.DEBUG:
-            print(f'INFO: created {CACHE_FILE_PATH}')
+        logging.debug(f"Created file {CACHE_FILE_PATH}")
 
 
 def get_current_mode():
