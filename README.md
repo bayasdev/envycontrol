@@ -80,6 +80,9 @@ options:
   --use-nvidia-current  Use nvidia-current instead of nvidia for kernel modules
   --reset-sddm          Restore default Xsetup file
   --reset               Revert changes made by EnvyControl
+  --cache-create        Create cache used by EnvyControl; only works in hybrid mode
+  --cache-delete        Delete cache created by EnvyControl
+  --cache-query         Show cache created by EnvyControl
   --verbose             Enable verbose mode
 ```
 
@@ -120,6 +123,55 @@ Revert all changes made by EnvyControl:
 ```
 sudo envycontrol --reset
 ```
+
+### Caching added with 3.4.0
+A cache was added in version 3.4.0. The main purpose is to cache the Nvidia PCI bus ID so that a transition from integrated mode directly to nvidia mode is possible.
+
+#### Cache file location
+
+```python
+CACHE_FILE_PATH = '/var/cache/envycontrol/cache.json'
+```
+
+#### File format
+
+```json
+{
+  "nvidia_gpu_pci_bus": "PCI:1:0:0"
+}
+```
+
+The cache is automatically re-created whenever a switch from hybrid mode is performed.
+
+#### Caching command line examples
+
+Create cache used by EnvyControl; only works in hybrid mode
+
+```
+sudo envycontrol --cache-create
+```
+
+When create cache is called when the system is in integrated or nvidia modes
+
+```
+sudo envycontrol --cache-create
+...
+ValueError: --cache-create requires that the system be in the hybrid Optimus mode
+```
+
+
+Delete cache created by EnvyControl
+
+```
+sudo envycontrol --cache-delete
+```
+
+Show cache created by EnvyControl
+
+```
+sudo envycontrol --cache-query
+```
+
 
 ## ⬇️ Getting EnvyControl
 
