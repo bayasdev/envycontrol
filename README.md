@@ -127,6 +127,9 @@ sudo envycontrol --reset
 ### Caching added with 3.4.0
 A cache was added in version 3.4.0. The main purpose is to cache the Nvidia PCI bus ID so that a transition from integrated mode directly to nvidia mode is possible.
 
+> [!NOTE]
+> *Transition from integrated mode directly to nvidia mode is possible* does **NOT** means that changes will be applied on the fly. A reboot is still required.
+
 #### Cache file location
 
 ```python
