@@ -129,6 +129,8 @@ A cache was added in version 3.4.0. The main purpose is to cache the Nvidia PCI 
 
 #### Cache file location
 
+Note that these are just helpers to accomodate maintenance tasks. The cache is created automatically whenever switching away from hybrid mode - to integrated or nvidia mode.
+
 ```python
 CACHE_FILE_PATH = '/var/cache/envycontrol/cache.json'
 ```
@@ -172,8 +174,6 @@ Show cache created by EnvyControl
 sudo envycontrol --cache-query
 ```
 
->[!NOTE]
-> These are just helpers to accomodate maintenance tasks. The cache is created automatically whenever switching away from hybrid mode - to integrated or nvidia mode.
 
 ## ⬇️ Getting EnvyControl
 
