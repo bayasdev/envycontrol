@@ -273,6 +273,16 @@ sudo ln -s /dev/null /etc/udev/rules.d/61-gdm.rules
 
 If this ever happens please run `sudo envycontrol --reset-sddm`.
 
+### Files to remove if uninstalling `envycontrol`
+The below files are created by `envycontrol`, and you may want to remove them manually if they are not removed automatically to avoid any incorrect system behaviour.
+* `/var/cache/envycontrol`
+* `/etc/modprobe.d/blacklist-nvidia.conf`
+* `/lib/udev/rules.d/50-remove-nvidia.rules`
+* `/lib/udev/rules.d/80-nvidia-pm.rules`
+* `/etc/X11/xorg.conf`
+* `/etc/X11/xorg.conf.d/10-nvidia.conf`
+* `/etc/modprobe.d/nvidia.conf`
+
 ## ❓ Frequently Asked Questions (FAQ)
 
 [Read here](https://github.com/bayasdev/envycontrol/wiki/Frequently-Asked-Questions)
