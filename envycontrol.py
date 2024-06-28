@@ -528,7 +528,7 @@ def main():
                         help='Enable ForceCompositionPipeline on Nvidia mode')
     parser.add_argument('--coolbits', type=int, nargs='?', metavar='VALUE', action='store', const=28,
                         help='Enable Coolbits on Nvidia mode. Default if specified: %(const)s')
-    parser.add_argument('--rtd3', type=int, nargs='?', metavar='VALUE', action='store', choices=RTD3_MODES, const=2,
+    parser.add_argument('--rtd3', type=int, nargs='?', metavar='VALUE', action='store', choices=RTD3_MODES, const=1,
                         help='Setup PCI-Express Runtime D3 (RTD3) Power Management on Hybrid mode. Available choices: %(choices)s. Default if specified: %(const)s')
     parser.add_argument('--use-nvidia-current', action='store_true',
                         help='Use nvidia-current instead of nvidia for kernel modules')
