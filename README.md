@@ -256,6 +256,10 @@ The [GPU profile selector](https://github.com/LorenzoMorelli/GPU_profile_selecto
 
 ## 💡 Tips
 
+### Black screen on Debian with Nvidia mode?
+
+Try adding `xrandr --auto` to your `~/.xsessionrc`. See https://github.com/bayasdev/envycontrol/issues/173#issuecomment-2205292306, also check the [Wiki](https://github.com/bayasdev/envycontrol/wiki/Frequently-Asked-Questions#what-to-do-if-my-display-manager-is-not-supported) for an alternative solution if this didn't work.
+
 ### `nvidia` kernel module is named `nvidia-current` on Debian
 
 If you're running into this situation you can use the `--use-nvidia-current` flag to make EnvyControl use the correct module name.
