@@ -214,7 +214,7 @@ RTD3_MODES = [0, 1, 2, 3]
 # end constants definition
 
 
-def graphics_mode_switcher(graphics_mode, user_display_manager, enable_force_comp, coolbits_value, rtd3_value, use_nvidia_current):
+def graphics_mode_switcher(graphics_mode, user_display_manager, enable_force_comp, coolbits_value, rtd3_value, use_nvidia_current, using_ostree):
     print(f"Switching to {graphics_mode} mode")
 
     if graphics_mode == 'integrated':
@@ -239,7 +239,7 @@ def graphics_mode_switcher(graphics_mode, user_display_manager, enable_force_com
         # power off the Nvidia GPU with udev rules
         create_file(UDEV_INTEGRATED_PATH, UDEV_INTEGRATED)
 
-        rebuild_initramfs()
+        rebuild_initramfs(using_ostree)
     elif graphics_mode == 'hybrid':
         print(
             f"Enable PCI-Express Runtime D3 (RTD3) Power Management: {rtd3_value or False}")
@@ -271,7 +271,7 @@ def graphics_mode_switcher(graphics_mode, user_display_manager, enable_force_com
                 create_file(MODESET_PATH, MODESET_RTD3.format(rtd3_value))
             create_file(UDEV_PM_PATH, UDEV_PM_CONTENT)
 
-        rebuild_initramfs()
+        rebuild_initramfs(using_ostree)
     elif graphics_mode == 'nvidia':
         print(f"Enable ForceCompositionPipeline: {enable_force_comp}")
         print(f"Enable Coolbits: {coolbits_value or False}")
@@ -338,7 +338,7 @@ def graphics_mode_switcher(graphics_mode, user_display_manager, enable_force_com
                         generate_xrandr_script(igpu_vendor), True)
             create_file(LIGHTDM_CONFIG_PATH, LIGHTDM_CONFIG_CONTENT)
 
-        rebuild_initramfs()
+        rebuild_initramfs(using_ostree)
     print('Operation completed successfully')
     print('Please reboot your computer for changes to take effect!')
 
@@ -462,9 +462,23 @@ def get_amd_igpu_name():
         return None
 
 
-def rebuild_initramfs():
+def rebuild_initramfs(using_ostree):
+    
+    # OSTREE systems need to be considered first
+    if using_ostree:
+        # As per the rpm-ostree manpage, the command rpm-ostree initramfs
+        # may be used to regenerate the iintramfs with dracut. This will
+        # run a full regeneration, similar to what is used in the other
+        # trees of this if/elif
+
+        # I'm keeping --force, but --regenerate-all is not necessary
+        # because rpm-ostree already passes the kernel version.
+
+        # this takes a LLOOOOOONG time to run, so let's warn the user first.
+        print('Regenerating initramfs with rpm-ostree. This will take several minutes; please be patient.')
+        command = ['rpm-ostree', 'initramfs', '--enable', '--arg=--force', '--arg=--regenerate-all']
     # Debian and Ubuntu derivatives
-    if os.path.exists('/etc/debian_version'):
+    elif os.path.exists('/etc/debian_version'):
         command = ['update-initramfs', '-u', '-k', 'all']
     # RHEL and SUSE derivatives
     elif os.path.exists('/etc/redhat-release') or os.path.exists('/usr/bin/zypper'):
@@ -544,6 +558,9 @@ def main():
                         help='Show cache created by EnvyControl')
     parser.add_argument('--verbose', default=False, action='store_true',
                         help='Enable verbose mode')
+    # Tell the software that we're on OSTREE and need to do special stuff
+    parser.add_argument('--ostree', default=False, action='store_true',
+                        help='Regenerate initramfs using rpm-ostree instead of the standard method. Required if using an ostree-based distribution.')
 
     # print help if no arg is provided
     if len(sys.argv) == 1:
@@ -581,7 +598,7 @@ def main():
                 assert_root()
                 graphics_mode_switcher(
                     args.switch, args.dm,
-                    args.force_comp, args.coolbits, args.rtd3, args.use_nvidia_current
+                    args.force_comp, args.coolbits, args.rtd3, args.use_nvidia_current, args.ostree
                 )
             elif args.reset_sddm:
                 assert_root()
