@@ -367,6 +367,23 @@ def cleanup():
             if e.errno != 2:
                 logging.error(f"Failed to remove file '{file_path}': {e}")
 
+    # attempt to delete rules from legacy directory
+    legacy_udev = '/lib/udev/rules.d/50-remove-nvidia.rules'
+    legacy_udev_pm = '/lib/udev/rules.d/80-nvidia-pm.rules'
+    if os.path.exists(legacy_udev):
+        try:
+            os.remove(legacy_udev)
+        except:
+            if e.errno != 2:
+                logging.error(f"Failed to remove file '{file_path}': {e}")
+    
+    if os.path.exists(legacy_udev_pm):
+        try:
+            os.remove(legacy_udev_pm)
+        except:
+            if e.errno != 2:
+                logging.error(f"Failed to remove file '{file_path}': {e}")
+
     # restore Xsetup backup if found
     backup_path = SDDM_XSETUP_PATH + ".bak"
     if os.path.exists(backup_path):
