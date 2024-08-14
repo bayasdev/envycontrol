@@ -234,6 +234,16 @@ envycontrol.packages.x86_64-linux.default
 
 Thanks to [@ITesserakt](https://github.com/ITesserakt) for adding initial NixOS support!
 
+### OSTree Distros (Silverblue, Kinoite, Bazzite, etc.)
+
+These distributions are also supported by the same COPR repo as Fedora Workstation. Use the [COPR](https://copr.fedorainfracloud.org/coprs/sunwire/envycontrol/) maintained by [@sunwire](https://github.com/sunwire).
+
+1. Enable the COPR by downloading the `.repo` file from the COPR page, linked above. Put the `.repo` file in `/etc/yum.repos.d`.
+2. Clean package cache with `rpm-ostree cleanup -m`.
+3. Overlay the package with `rpm-ostree install python-envycontrol`.
+4. Reboot to apply the overlay.
+5. Use EnvyControl with `sudo envycontrol -s <MODE>`
+
 ### From source
 
 1. Clone this repository with `git clone https://github.com/bayasdev/envycontrol.git` or download the latest tarball from the releases page
