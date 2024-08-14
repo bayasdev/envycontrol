@@ -355,6 +355,8 @@ def cleanup():
         MODESET_PATH,
         LIGHTDM_SCRIPT_PATH,
         LIGHTDM_CONFIG_PATH,
+        '/lib/udev/rules.d/50-remove-nvidia.rules',
+        '/lib/udev/rules.d/80-nvidia-pm.rules'
     ]
 
     # remove each file in the list
@@ -364,23 +366,6 @@ def cleanup():
             logging.info(f"Removed file {file_path}")
         except OSError as e:
             # only warn if file exists (code 2)
-            if e.errno != 2:
-                logging.error(f"Failed to remove file '{file_path}': {e}")
-
-    # attempt to delete rules from legacy directory
-    legacy_udev = '/lib/udev/rules.d/50-remove-nvidia.rules'
-    legacy_udev_pm = '/lib/udev/rules.d/80-nvidia-pm.rules'
-    if os.path.exists(legacy_udev):
-        try:
-            os.remove(legacy_udev)
-        except:
-            if e.errno != 2:
-                logging.error(f"Failed to remove file '{file_path}': {e}")
-    
-    if os.path.exists(legacy_udev_pm):
-        try:
-            os.remove(legacy_udev_pm)
-        except:
             if e.errno != 2:
                 logging.error(f"Failed to remove file '{file_path}': {e}")
 
@@ -481,17 +466,8 @@ def get_amd_igpu_name():
 
 def rebuild_initramfs():
     
-    # OSTREE systems need to be considered first
+    # OSTREE systems first
     if any(os.path.exists(dir) for dir in ['/ostree', '/sysroot/ostree']):
-        # As per the rpm-ostree manpage, the command rpm-ostree initramfs
-        # may be used to regenerate the iintramfs with dracut. This will
-        # run a full regeneration, similar to what is used in the other
-        # trees of this if/elif
-
-        # I'm keeping --force, but --regenerate-all is not necessary
-        # because rpm-ostree already passes the kernel version.
-
-        # this takes a LLOOOOOONG time to run, so let's warn the user first.
         print('Regenerating initramfs with rpm-ostree. This will take several minutes; please be patient.')
         command = ['rpm-ostree', 'initramfs', '--enable', '--arg=--force']
 
@@ -632,7 +608,7 @@ class CachedConfig:
 
     def __init__(self, app_args) -> None:
         self.app_args = app_args
-        self.current_mode = get_nvidia_gpu_pci_bus()
+        self.current_mode = get_current_mode()
 
     @contextmanager
     def adapter(self):
