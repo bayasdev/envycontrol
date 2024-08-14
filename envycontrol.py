@@ -27,6 +27,7 @@ blacklist nvidia_current
 blacklist nvidia_current_drm
 blacklist nvidia_current_uvm
 blacklist nvidia_current_modeset
+blacklist i2c_nvidia_gpu
 alias nouveau off
 alias nvidia off
 alias nvidia_drm off
@@ -36,6 +37,7 @@ alias nvidia_current off
 alias nvidia_current_drm off
 alias nvidia_current_uvm off
 alias nvidia_current_modeset off
+alias i2c_nvidia_gpu off
 '''
 
 UDEV_INTEGRATED_PATH = '/etc/udev/rules.d/50-remove-nvidia.rules'
