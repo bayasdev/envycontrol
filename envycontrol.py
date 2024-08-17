@@ -9,7 +9,7 @@ from contextlib import contextmanager
 
 # begin constants definition
 
-VERSION = '3.4.0'
+VERSION = '3.5.0'
 
 # Note: Do NOT remove this in cleanup!
 CACHE_FILE_PATH = '/var/cache/envycontrol/cache.json'
@@ -469,10 +469,9 @@ def get_amd_igpu_name():
 
 
 def rebuild_initramfs():
-    
-    # OSTREE systems first
+    # OSTree systems first
     if any(os.path.exists(dir) for dir in ['/ostree', '/sysroot/ostree']):
-        print('Regenerating initramfs with rpm-ostree. This will take several minutes; please be patient.')
+        print('Rebuilding the initramfs with rpm-ostree...')
         command = ['rpm-ostree', 'initramfs', '--enable', '--arg=--force']
 
     # Debian and Ubuntu derivatives
