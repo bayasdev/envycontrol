@@ -353,10 +353,11 @@ def cleanup():
         UDEV_PM_PATH,
         XORG_PATH,
         EXTRA_XORG_PATH,
-        '/etc/X11/xorg.conf.d/90-nvidia.conf',
         MODESET_PATH,
         LIGHTDM_SCRIPT_PATH,
         LIGHTDM_CONFIG_PATH,
+        # legacy files
+        '/etc/X11/xorg.conf.d/90-nvidia.conf',
         '/lib/udev/rules.d/50-remove-nvidia.rules',
         '/lib/udev/rules.d/80-nvidia-pm.rules'
     ]
@@ -364,8 +365,9 @@ def cleanup():
     # remove each file in the list
     for file_path in to_remove:
         try:
-            os.remove(file_path)
-            logging.info(f"Removed file {file_path}")
+            if os.path.exists(file_path):
+                os.remove(file_path)
+                logging.info(f"Removed file {file_path}")
         except OSError as e:
             # only warn if file exists (code 2)
             if e.errno != 2:
