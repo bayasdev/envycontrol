@@ -688,7 +688,7 @@ class CachedConfig:
 
 def get_current_mode():
     mode = 'hybrid'
-    if os.path.exists(BLACKLIST_PATH) and os.path.exists(UDEV_INTEGRATED_PATH):
+    if os.path.exists(BLACKLIST_PATH) and (os.path.exists(UDEV_INTEGRATED_PATH) or os.path.exists('/lib/udev/rules.d/50-remove-nvidia.rules')):
         mode = 'integrated'
     elif os.path.exists(XORG_PATH) and os.path.exists(MODESET_PATH):
         mode = 'nvidia'
