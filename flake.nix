@@ -10,7 +10,7 @@
       packages.${system} = {
         envycontrol = pkgs.python3Packages.buildPythonPackage {
           pname = "envycontrol";
-          version = "3.5.0";
+          version = "3.5.1";
           src = self;
         };
         default = self.packages.${system}.envycontrol;
