@@ -483,6 +483,9 @@ def rebuild_initramfs():
     # EndeavourOS with dracut
     elif os.path.exists('/usr/lib/endeavouros-release') and os.path.exists('/usr/bin/dracut'):
         command = ['dracut-rebuild']
+    # ALT Linux
+    elif os.path.exists('/etc/altlinux-release'):
+        command = ['make-initrd']
     else:
         command = []
 
