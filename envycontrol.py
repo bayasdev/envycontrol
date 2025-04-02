@@ -486,6 +486,9 @@ def rebuild_initramfs():
     # ALT Linux
     elif os.path.exists('/etc/altlinux-release'):
         command = ['make-initrd']
+    # Arch Linux
+    elif os.path.exists('/etc/arch-release'):
+        command = ['mkinitcpio', '-P']
     else:
         command = []
 
