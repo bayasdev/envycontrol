@@ -9,7 +9,7 @@ from contextlib import contextmanager
 
 # begin constants definition
 
-VERSION = '3.5.1'
+VERSION = '3.5.2'
 
 # Note: Do NOT remove this in cleanup!
 CACHE_FILE_PATH = '/var/cache/envycontrol/cache.json'
