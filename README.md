@@ -190,7 +190,7 @@ Use the [COPR](https://copr.fedorainfracloud.org/coprs/sunwire/envycontrol/) mai
 2. `sudo dnf install python3-envycontrol`
 3. Run `sudo envycontrol -s <MODE>` to switch graphics modes
 
-### Enterprise Linux + EPEL 9 (RHEL 9, Rocky Linux 9, CentOS Stream 9, Alma Linux 9 etc.)
+### Enterprise Linux + EPEL 9 and later (RHEL, Rocky Linux, CentOS Stream, Alma Linux etc.)
 
 Use the [COPR](https://copr.fedorainfracloud.org/coprs/thonkdifferent/envycontrol/) maintained by [@thonkdifferent](https://github.com/thonkdifferent)
 
