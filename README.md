@@ -272,6 +272,14 @@ The [GPU profile selector](https://github.com/LorenzoMorelli/GPU_profile_selecto
 
 ![Screenshot_20230703_153738](https://github.com/enielrodriguez/optimus-gpu-switcher/assets/31964610/ace0c67e-9428-49fd-895c-48a236727898)
 
+### Cinnamon Applet
+
+[EnvyControl applet](https://cinnamon-spices.linuxmint.com/applets/view/414)
+features dynamic icon displaying current mode/configuration in progress icon,
+notifications, window dialog shown on error, log displaying and settings page.
+
+![screenshot](https://cinnamon-spices.linuxmint.com/git/applets/envycontrol@zamszowy/screenshot.png)
+
 ## 💡 Tips
 
 ### Black screen on Debian with Nvidia mode?
