@@ -5,6 +5,7 @@ import os
 import re
 import subprocess
 import sys
+import shutil
 from contextlib import contextmanager
 
 # begin constants definition
@@ -503,6 +504,15 @@ def rebuild_initramfs():
         command = ['mkinitcpio', '-P']
     else:
         command = []
+
+    if shutil.which("systemd-inhibit"):
+        command = [
+            'systemd-inhibit',
+            '--who=envycontrol',
+            '--why', 'Rebuilding initramfs',
+            '--',
+            *command
+        ]
 
     if len(command) != 0:
         print('Rebuilding the initramfs...')
