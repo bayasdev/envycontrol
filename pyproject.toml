@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "envycontrol"
+dynamic = ["version"]
+description = "Easy GPU switching for Nvidia Optimus laptops under Linux"
+readme = "README.md"
+license = "MIT"
+authors = [
+    { name = "Victor Bayas", email = "victorsbayas@gmail.com" },
+]
+keywords = [
+    "gpu",
+    "linux",
+    "nvidia",
+    "optimus",
+    "prime",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+]
+
+[project.scripts]
+envycontrol = "envycontrol:main"
+
+[project.urls]
+Homepage = "http://github.com/bayasdev/envycontrol"
+
+[tool.hatch.version]
+path = "envycontrol/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/envycontrol",
+]
