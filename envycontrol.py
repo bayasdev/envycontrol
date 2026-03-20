@@ -470,6 +470,7 @@ def get_amd_igpu_name():
     except subprocess.CalledProcessError:
         logging.warning(
             "Failed to run the 'xrandr' command.")
+        return None
 
     pattern = re.compile(r'(name:).*(ATI*|AMD*|AMD\/ATI)*')
 
@@ -646,7 +647,11 @@ class CachedConfig:
         global get_nvidia_gpu_pci_bus
         use_cache = os.path.exists(CACHE_FILE_PATH)
 
-        if self.is_hybrid():  # recreate cache file when in hybrid mode
+        # Only cache the GPU PCI bus when leaving hybrid mode.
+        # Switching *to* hybrid never needs the cached value and the GPU
+        # may not be visible via lspci if old udev removal rules are still
+        # in place, which would make create_cache_file() exit early.
+        if self.is_hybrid() and self.app_args.switch != 'hybrid':
             self.create_cache_file()
 
         if use_cache:
@@ -716,7 +721,9 @@ class CachedConfig:
 
 def get_current_mode():
     mode = 'hybrid'
-    if os.path.exists(BLACKLIST_PATH) and (os.path.exists(UDEV_INTEGRATED_PATH) or os.path.exists('/lib/udev/rules.d/50-remove-nvidia.rules')):
+    if (os.path.exists(BLACKLIST_PATH) or
+            os.path.exists(UDEV_INTEGRATED_PATH) or
+            os.path.exists('/lib/udev/rules.d/50-remove-nvidia.rules')):
         mode = 'integrated'
     elif os.path.exists(XORG_PATH) and os.path.exists(MODESET_PATH):
         mode = 'nvidia'
